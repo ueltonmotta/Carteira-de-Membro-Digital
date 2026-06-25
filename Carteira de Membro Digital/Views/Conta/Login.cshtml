@@ -1,0 +1,62 @@
+﻿@{
+    ViewData["Title"] = "Login - ADHEL";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>@ViewData["Title"]</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <head>
+        <link rel="manifest" href="/manifest.json">
+
+        <meta name="theme-color" content="#0d1326">
+        <link rel="apple-touch-icon" href="/images/icone-192.png">
+        
+    </head>
+
+</head>
+<body style="background-color: #0d1326; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; font-family: 'Montserrat', sans-serif;">
+
+    <div style="width: 100%; max-width: 400px; padding: 20px; text-align: center;">
+
+        
+        <div style="background: #fff; border-radius: 20px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: left;">
+            <h2 style="color: #0d1326; margin-top: 0; margin-bottom: 25px; text-align: center;">Bem-vindo</h2>
+
+            <form asp-controller="Conta" asp-action="FazerLogin" method="post">
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; color: #4a5568; font-size: 13px; font-weight: bold; margin-bottom: 5px;">E-mail</label>
+                    <input type="email" name="email" placeholder="seu@email.com" style="width: 100%; padding: 12px; border: 1px solid #cbd5e0; border-radius: 10px; font-size: 15px; box-sizing: border-box; outline: none;" required />
+                </div>
+
+                <div style="margin-bottom: 10px;">
+                    <label style="display: block; color: #4a5568; font-size: 13px; font-weight: bold; margin-bottom: 5px;">Senha</label>
+                    <input type="password" name="senha" placeholder="••••••••" style="width: 100%; padding: 12px; border: 1px solid #cbd5e0; border-radius: 10px; font-size: 15px; box-sizing: border-box; outline: none;" required />
+                </div>
+
+                <div style="text-align: right; margin-bottom: 25px;">
+                    <a href="@Url.Action("RecuperarSenha", "Conta")" style="color: #2c5282; font-size: 13px; text-decoration: none; font-weight: bold;">Esqueceu a senha?</a>
+                </div>
+
+                <button type="submit" style="width: 100%; background: #0d1326; color: white; border: none; padding: 15px; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer;">
+                    Entrar
+                </button>
+            </form>
+
+            <p style="text-align: center; margin-top: 20px; font-size: 14px; color: #4a5568;">
+                Não tem conta? <a href="@Url.Action("Cadastro", "Conta")" style="color: #2c5282; font-weight: bold; text-decoration: none;">Cadastre-se</a>
+            </p>
+        </div>
+    </div>
+    <script>
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(() => console.log("Service Worker Registrado!"));
+            }
+    </script>
+</body>
+</html>

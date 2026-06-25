@@ -1,0 +1,25 @@
+﻿@{
+    ViewData["Title"] = "Área Pastoral - Validação";
+    // Usa o layout padrão do sistema (com menus, caso o pastor precise)
+}
+
+<div style="max-width: 500px; margin: 50px auto; text-align: center; font-family: 'Montserrat', sans-serif; background: #fff; padding: 30px; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.1);">
+
+    <h2 style="color: #2c5282; margin-bottom: 20px;">Validação de Membro</h2>
+
+    <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 30px; border: 1px solid #e2e8f0;">
+        <p style="color: #718096; font-size: 14px; text-transform: uppercase;">Membro Identificado</p>
+        <h3 style="color: #2d3748; font-size: 24px; margin: 10px 0;">@ViewBag.MembroNome</h3>
+        <p style="color: #4a5568; font-weight: bold;">ID: @ViewBag.MembroId</p>
+    </div>
+
+    <p style="color: #4a5568; margin-bottom: 30px;">Ao confirmar, sua assinatura digital será anexada ao cartão de membro oficial desta pessoa.</p>
+
+    <form asp-controller="Validacao" asp-action="ConfirmarAprovacao" method="post">
+        <input type="hidden" name="id" value="@ViewBag.MembroId" />
+
+        <button type="submit" style="background-color: #2f855a; color: white; border: none; padding: 15px 30px; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; width: 100%;">
+            ✅ Confirmar e Validar
+        </button>
+    </form>
+</div>

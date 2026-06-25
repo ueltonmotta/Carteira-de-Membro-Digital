@@ -1,0 +1,53 @@
+﻿@{
+    ViewData["Title"] = "Recuperar Senha - ADHEL";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>@ViewData["Title"]</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body style="background-color: #0d1326; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; font-family: 'Montserrat', sans-serif;">
+
+    <div style="width: 100%; max-width: 400px; padding: 20px; text-align: center;">
+
+        <img src="~/images/logo-adhel.jpg" alt="ADHEL Logo" style="width: 120px; border-radius: 10px; margin-bottom: 15px;" />
+
+        <div style="background: #fff; border-radius: 20px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: left;">
+            <h2 style="color: #0d1326; margin-top: 0; margin-bottom: 10px; text-align: center;">Esqueci a Senha</h2>
+            <p style="text-align: center; color: #718096; font-size: 14px; margin-bottom: 25px;">
+                Digite o e-mail associado à sua conta para receber as instruções de recuperação.
+            </p>
+
+            @if (ViewBag.Mensagem != null)
+            {
+                <div style="background-color: #c6f6d5; color: #22543d; padding: 15px; border-radius: 10px; font-size: 13px; text-align: center; margin-bottom: 20px; font-weight: bold;">
+                    @ViewBag.Mensagem
+                </div>
+            }
+
+            <form asp-controller="Conta" asp-action="EnviarRecuperacao" method="post">
+                <div style="margin-bottom: 25px;">
+                    <label style="display: block; color: #4a5568; font-size: 13px; font-weight: bold; margin-bottom: 5px;">Seu E-mail</label>
+                    <input type="email" name="email" placeholder="Ex: email@dominio.com" style="width: 100%; padding: 12px; border: 1px solid #cbd5e0; border-radius: 10px; font-size: 15px; box-sizing: border-box; outline: none;" required />
+                </div>
+
+                <button type="submit" style="width: 100%; background: #2c5282; color: white; border: none; padding: 15px; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; margin-bottom: 15px;">
+                    Enviar Link de Recuperação
+                </button>
+            </form>
+
+            <div style="text-align: center;">
+                <a href="@Url.Action("Login", "Conta")" style="color: #4a5568; font-size: 14px; text-decoration: none; font-weight: bold;">
+                    ← Voltar para o Login
+                </a>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

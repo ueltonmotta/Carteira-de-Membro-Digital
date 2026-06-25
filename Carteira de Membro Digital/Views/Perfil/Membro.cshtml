@@ -1,0 +1,121 @@
+﻿@{
+    ViewData["Title"] = "Meu Perfil";
+    Layout = null; /* Esta linha remove a barra branca chata! */
+}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>@ViewData["Title"]</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body style="background-color: #1a202c; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; font-family: 'Montserrat', sans-serif;">
+
+    <div style="width: 100%; max-width: 400px; padding: 20px;">
+        <div style="background: #fff; border-radius: 20px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); text-align: center;">
+
+            <img src="~/images/foto-membro.jpg" alt="Foto" style="width: 110px; height: 110px; border-radius: 50%; border: 4px solid #bba371; object-fit: cover; margin-bottom: 15px;" />
+
+            <h2 style="color: #2c5282; margin: 0; font-size: 22px;">@ViewBag.Nome</h2>
+            <p style="color: #bba371; font-weight: bold; margin-top: 5px; font-size: 14px;">@ViewBag.Cargo</p>
+
+            <span style="display: inline-block; background-color: #c6f6d5; color: #22543d; padding: 6px 15px; border-radius: 20px; font-size: 12px; font-weight: bold; margin-bottom: 25px;">
+                Status: @ViewBag.Status
+            </span>
+
+            <div style="background: #f8fafc; border-radius: 12px; padding: 20px; text-align: left; margin-bottom: 25px; border: 1px solid #e2e8f0;">
+                <p style="margin-bottom: 12px; color: #4a5568; font-size: 14px;"><strong><i class="fa-solid fa-envelope" style="color: #2c5282;"></i> Email:</strong><br> @ViewBag.Email</p>
+                <p style="margin: 0; color: #4a5568; font-size: 14px;"><strong><i class="fa-solid fa-phone" style="color: #2c5282;"></i> Telefone:</strong><br> @ViewBag.Telefone</p>
+            </div>
+
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <a href="@Url.Action("Index", "Home")" style="flex: 1; background: #2c5282; color: #fff; text-decoration: none; padding: 12px; border-radius: 10px; font-size: 14px; font-weight: bold;">
+                    Ver Cartão
+                </a>
+                <a href="@Url.Action("Editar", "Perfil")" style="flex: 1; background: #edf2f7; color: #2d3748; text-decoration: none; padding: 12px; border-radius: 10px; font-size: 14px; font-weight: bold; border: 1px solid #cbd5e0;">
+                    Editar Perfil
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="mobile-nav">
+        <a href="@Url.Action("Index", "Home")" class="nav-item">
+            <i class="fa-solid fa-id-card"></i>
+            <span>Cartão</span>
+        </a>
+
+        <a href="@Url.Action("Membro", "Perfil")" class="nav-item active">
+            <i class="fa-solid fa-user"></i>
+            <span>Perfil</span>
+        </a>
+
+        <a href="@Url.Action("Editar", "Perfil")" class="nav-item">
+            <i class="fa-solid fa-pen-to-square"></i>
+            <span>Editar</span>
+        </a>
+
+        <a href="@Url.Action("Login", "Conta")" class="nav-item text-danger">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span>Sair</span>
+        </a>
+    </div>
+
+    <style>
+            /* Adiciona um espaço extra no fim da página para o menu não tampar o conteúdo */
+            body {
+                padding-bottom: 80px !important;
+            }
+
+            .mobile-nav {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                background-color: #ffffff;
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+                padding: 12px 0 15px 0; /* Espaçamento confortável para os dedos */
+                box-shadow: 0 -5px 20px rgba(0,0,0,0.15);
+                z-index: 1000;
+                border-top-left-radius: 25px; /* Bordas arredondadas no topo */
+                border-top-right-radius: 25px;
+            }
+
+            .nav-item {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-decoration: none;
+                color: #718096; /* Cinza padrão */
+                font-size: 11px;
+                font-weight: 700;
+                transition: all 0.3s ease;
+            }
+
+                .nav-item i {
+                    font-size: 22px;
+                    margin-bottom: 4px;
+                }
+
+                /* Cor de quando o menu está selecionado (Dourado ADHEL) */
+                .nav-item.active {
+                    color: #bba371;
+                    transform: translateY(-3px); /* Dá um leve saltinho para cima */
+                }
+
+                /* Cor do botão de sair (Vermelho) */
+                .nav-item.text-danger {
+                    color: #e53e3e;
+                }
+
+                /* Efeito de clique */
+                .nav-item:active {
+                    transform: scale(0.9);
+                }
+    </style>
+</body>
+</html>

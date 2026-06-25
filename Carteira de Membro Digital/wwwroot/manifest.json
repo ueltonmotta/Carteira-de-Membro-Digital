@@ -1,0 +1,21 @@
+{
+  "name": "Carteira de Membro ADHEL",
+  "short_name": "ADHEL",
+  "description": "Aplicativo oficial para membros da ADHEL",
+  "start_url": "/Conta/Login",
+  "display": "standalone",
+  "background_color": "#0d1326",
+  "theme_color": "#0d1326",
+  "icons": [
+    {
+      "src": "/images/icone-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/icone-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

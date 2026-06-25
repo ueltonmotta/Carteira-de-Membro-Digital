@@ -1,0 +1,255 @@
+﻿@{
+    ViewData["Title"] = "Ficha de Membro - ADHEL";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>@ViewData["Title"]</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+            body {
+                background-color: #0d1326;
+                margin: 0;
+                font-family: 'Montserrat', sans-serif;
+                display: flex;
+                justify-content: center;
+                padding: 20px 0;
+            }
+
+            .container {
+                width: 100%;
+                max-width: 440px;
+                padding: 10px;
+            }
+
+            .card {
+                background: #fff;
+                border-radius: 20px;
+                padding: 30px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            }
+
+            .logo {
+                width: 120px;
+                display: block;
+                margin: 0 auto 15px;
+                border-radius: 10px;
+            }
+
+            h2 {
+                color: #0d1326;
+                text-align: center;
+                margin-bottom: 25px;
+                font-size: 22px;
+                font-weight: 700;
+            }
+
+            label {
+                display: block;
+                color: #4a5568;
+                font-size: 11px;
+                font-weight: bold;
+                margin-bottom: 5px;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            input, select {
+                width: 100%;
+                padding: 12px;
+                border: 1px solid #cbd5e0;
+                border-radius: 10px;
+                font-size: 15px;
+                box-sizing: border-box;
+                outline: none;
+                margin-bottom: 15px;
+                background: #f7fafc;
+                font-family: 'Montserrat', sans-serif;
+            }
+
+                input:focus, select:focus {
+                    border-color: #0d1326;
+                    background: #fff;
+                }
+
+            .section-title {
+                color: #bba371;
+                font-size: 13px;
+                font-weight: 700;
+                margin: 20px 0 15px;
+                border-bottom: 2px solid #f0f4f8;
+                padding-bottom: 5px;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+
+            .row {
+                display: flex;
+                gap: 12px;
+            }
+
+            .col {
+                flex: 1;
+            }
+
+            button {
+                width: 100%;
+                background: #0d1326;
+                color: white;
+                border: none;
+                padding: 16px;
+                border-radius: 10px;
+                font-size: 16px;
+                font-weight: bold;
+                cursor: pointer;
+                margin-top: 15px;
+                box-shadow: 0 4px 12px rgba(13, 19, 38, 0.3);
+            }
+
+            .error-msg {
+                background-color: #fed7d7;
+                color: #9b2c2c;
+                padding: 12px;
+                border-radius: 10px;
+                font-size: 13px;
+                margin-bottom: 15px;
+                font-weight: bold;
+                text-align: center;
+            }
+
+            #divConjuge {
+                display: none;
+            }
+            /* Escondido por padrão */
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="card">
+            <img src="~/images/logo-adhel.jpg" class="logo" alt="ADHEL" />
+            <h2>Ficha de Cadastro Ministerial</h2>
+
+            @if (ViewBag.ErroSenha != null)
+            {
+                <div class="error-msg">@ViewBag.ErroSenha</div>
+            }
+
+            <form asp-controller="Conta" asp-action="RealizarCadastro" method="post">
+
+                <div class="section-title">1. Dados de Acesso</div>
+                <label>E-mail (Seu Login)</label>
+                <input type="email" name="Email" placeholder="exemplo@email.com" required />
+
+                <div class="row">
+                    <div class="col">
+                        <label>Senha (6 dígitos)</label>
+                        <input type="password" name="Senha" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="******" required />
+                    </div>
+                    <div class="col">
+                        <label>Confirmar Senha</label>
+                        <input type="password" name="confirmarSenha" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="******" required />
+                    </div>
+                </div>
+
+                <div class="section-title">2. Identificação Pessoal</div>
+
+                <label>Nome Completo</label>
+                <input type="text" name="Nome" required />
+
+                <div class="row">
+                    <div class="col">
+                        <label>Data de Nascimento</label>
+                        <input type="date" name="DataNascimento" required />
+                    </div>
+                    <div class="col">
+                        <label>Nacionalidade</label>
+                        <input type="text" name="Nacionalidade" value="Brasileira" required />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <label>RG</label>
+                        <input type="text" name="RG" required />
+                    </div>
+                    <div class="col">
+                        <label>CPF</label>
+                        <input type="text" name="CPF" required />
+                    </div>
+                </div>
+
+                <label>Telefone / WhatsApp</label>
+                <input type="tel" name="Telefone" placeholder="(00) 00000-0000" required />
+
+                <label>Estado Civil</label>
+                <select name="EstadoCivil" id="estadoCivilSelect" onchange="verificarEstadoCivil()">
+                    <option value="Solteiro(a)">Solteiro(a)</option>
+                    <option value="Casado(a)">Casado(a)</option>
+                    <option value="Divorciado(a)">Divorciado(a)</option>
+                    <option value="Viúvo(a)">Viúvo(a)</option>
+                </select>
+
+                <div id="divConjuge">
+                    <label>Nome do Cônjuge (Esposo/Esposa)</label>
+                    <input type="text" name="Conjuge" id="inputConjuge" />
+                </div>
+
+                <div class="section-title">3. Filiação</div>
+
+                <label>Nome do Pai</label>
+                <input type="text" name="NomePai" placeholder="Nome completo do pai" />
+
+                <label>Nome da Mãe</label>
+                <input type="text" name="NomeMae" placeholder="Nome completo da mãe" required />
+
+                <div class="section-title">4. Dados Eclesiásticos</div>
+
+                <div class="row">
+                    <div class="col">
+                        <label>Cargo / Função</label>
+                        <input type="text" name="Cargo" placeholder="Ex: Membro, Diácono" required />
+                    </div>
+                    <div class="col">
+                        <label>Data de Batismo</label>
+                        <input type="date" name="DataBatismo" required />
+                    </div>
+                </div>
+
+                <label>Perfil de Sistema</label>
+                <select name="Perfil">
+                    <option value="Membro">Membro comum</option>
+                    <option value="Admin">Administrador (Pastor)</option>
+                </select>
+
+                <button type="submit">Finalizar e Criar Conta</button>
+            </form>
+
+            <p style="text-align: center; margin-top: 20px; font-size: 14px; color: #4a5568;">
+                Já tem cadastro? <a href="@Url.Action("Login", "Conta")" style="color: #2c5282; font-weight: bold; text-decoration: none;">Fazer Login</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+            function verificarEstadoCivil() {
+                var select = document.getElementById("estadoCivilSelect");
+                var divConjuge = document.getElementById("divConjuge");
+                var inputConjuge = document.getElementById("inputConjuge");
+
+                if (select.value === "Casado(a)") {
+                    divConjuge.style.display = "block";
+                    inputConjuge.required = true; // Torna obrigatório se for casado
+                } else {
+                    divConjuge.style.display = "none";
+                    inputConjuge.required = false;
+                    inputConjuge.value = ""; // Limpa o campo se mudar de ideia
+                }
+            }
+    </script>
+</body>
+</html>

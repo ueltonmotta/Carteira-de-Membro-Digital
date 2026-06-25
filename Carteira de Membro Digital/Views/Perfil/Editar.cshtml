@@ -1,0 +1,52 @@
+﻿@{
+    ViewData["Title"] = "Editar Perfil";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>@ViewData["Title"]</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body style="background-color: #1a202c; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; font-family: 'Montserrat', sans-serif;">
+
+    <div style="width: 100%; max-width: 400px; padding: 20px;">
+        <div style="background: #fff; border-radius: 20px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+
+            <h2 style="color: #2c5282; text-align: center; margin-top: 0; margin-bottom: 25px;">Atualizar Dados</h2>
+
+            <form asp-controller="Perfil" asp-action="SalvarEdicao" method="post">
+
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; color: #4a5568; font-size: 13px; font-weight: bold; margin-bottom: 5px;">Nome Completo</label>
+                    <input type="text" name="nome" value="@ViewBag.Nome" style="width: 100%; padding: 12px; border: 1px solid #cbd5e0; border-radius: 10px; font-size: 15px; box-sizing: border-box; outline: none;" required />
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; color: #4a5568; font-size: 13px; font-weight: bold; margin-bottom: 5px;">E-mail</label>
+                    <input type="email" name="email" value="@ViewBag.Email" style="width: 100%; padding: 12px; border: 1px solid #cbd5e0; border-radius: 10px; font-size: 15px; box-sizing: border-box; outline: none;" required />
+                </div>
+
+                <div style="margin-bottom: 25px;">
+                    <label style="display: block; color: #4a5568; font-size: 13px; font-weight: bold; margin-bottom: 5px;">Telefone / WhatsApp</label>
+                    <input type="text" name="telefone" value="@ViewBag.Telefone" style="width: 100%; padding: 12px; border: 1px solid #cbd5e0; border-radius: 10px; font-size: 15px; box-sizing: border-box; outline: none;" required />
+                </div>
+
+                <div style="display: flex; gap: 10px;">
+                    <a href="@Url.Action("Membro", "Perfil")" style="flex: 1; text-align: center; background: #edf2f7; color: #4a5568; text-decoration: none; padding: 14px; border-radius: 10px; font-size: 14px; font-weight: bold; border: 1px solid #cbd5e0;">
+                        Cancelar
+                    </a>
+                    <button type="submit" style="flex: 1.5; background: #2c5282; color: white; border: none; padding: 14px; border-radius: 10px; font-size: 14px; font-weight: bold; cursor: pointer;">
+                        Salvar
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+</body>
+</html>
