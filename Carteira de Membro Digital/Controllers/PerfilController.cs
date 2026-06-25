@@ -1,54 +1,69 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using System.IO;
+using System.Threading.Tasks;
+using System;
+using CarteiraDeMembroDigital.Models; // Para acessar o banco
+using System.Linq;
 
 namespace CarteiraDeMembroDigital.Controllers
 {
     public class PerfilController : Controller
     {
-        // 1. Tela do Perfil do Membro Comum
-        public IActionResult Membro()
-        {
-            // Simulando dados vindos do banco
-            ViewBag.Nome = "Ana Carolina da Silva";
-            ViewBag.Cargo = "Membro Ativo";
-            ViewBag.Email = "ana.silva@email.com";
-            ViewBag.Telefone = "(11) 98765-4321";
-            ViewBag.Status = "Aprovado";
+        private readonly ApplicationDbContext _banco;
 
-            return View();
+        public PerfilController(ApplicationDbContext banco)
+        {
+            _banco = banco;
         }
 
-        // 2. Tela do Perfil do Administrador (Pastor)
-        // [Authorize(Roles = "PastorPresidente")] // Descomente quando ativar o login
-        public IActionResult Administrador()
-        {
-            ViewBag.Nome = "Pr. João Marcos";
-            ViewBag.Cargo = "Pastor Presidente";
-            ViewBag.MembrosAtivos = 145;
-            ViewBag.ValidacoesPendentes = 12;
+        // ... suas outras rotas de Membro() e Administrador() continuam aqui ...
 
-            return View();
+        // TELA DE EDIÇÃO
+        public IActionResult Editar(int id)
+        {
+            // Busca o usuário real no banco (Você pode pegar o ID da sessão depois)
+            var usuario = _banco.Usuarios.FirstOrDefault(u => u.Id == id);
+
+            if (usuario == null) return NotFound();
+
+            return View(usuario); // Passa o objeto usuário inteiro para a tela
         }
 
-        // 3. Tela de Edição de Perfil
-        public IActionResult Editar()
-        {
-            // Carrega os dados atuais para o formulário
-            ViewBag.Nome = "Ana Carolina da Silva";
-            ViewBag.Email = "ana.silva@email.com";
-            ViewBag.Telefone = "(11) 98765-4321";
-
-            return View();
-        }
-
-        // 4. Ação para salvar os dados editados
+        // SALVAR A EDIÇÃO COM FOTO
         [HttpPost]
-        public IActionResult SalvarEdicao(string nome, string email, string telefone)
+        public async Task<IActionResult> SalvarEdicao(int Id, string Nome, string Telefone, IFormFile? novaFoto)
         {
-            // Aqui você salvaria no Banco de Dados.
-            // Exemplo: _banco.AtualizarUsuario(nome, email, telefone);
+            var usuario = _banco.Usuarios.Find(Id);
+            if (usuario == null) return NotFound();
 
-            // Redireciona de volta para o perfil do membro após salvar
+            // Atualiza os dados de texto
+            usuario.Nome = Nome;
+            usuario.Telefone = Telefone;
+
+            // Se o membro enviou uma foto nova...
+            if (novaFoto != null && novaFoto.Length > 0)
+            {
+                // 1. Define onde salvar (wwwroot/uploads)
+                var pastaUploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+
+                // 2. Cria um nome único e aleatório para a foto (ex: 5f4d8...jpg)
+                var nomeUnico = Guid.NewGuid().ToString() + Path.GetExtension(novaFoto.FileName);
+                var caminhoCompleto = Path.Combine(pastaUploads, nomeUnico);
+
+                // 3. Copia a foto do celular/PC para a pasta uploads
+                using (var stream = new FileStream(caminhoCompleto, FileMode.Create))
+                {
+                    await novaFoto.CopyToAsync(stream);
+                }
+
+                // 4. Salva o caminho da foto no Banco de Dados
+                usuario.FotoPerfil = "/uploads/" + nomeUnico;
+            }
+
+            _banco.SaveChanges();
+
+            // Redireciona de volta para o perfil
             return RedirectToAction("Membro");
         }
     }

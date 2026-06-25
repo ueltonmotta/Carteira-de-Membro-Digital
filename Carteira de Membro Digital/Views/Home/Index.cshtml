@@ -28,7 +28,7 @@
                     </div>
 
                     <div class="photo-section">
-                        <img src="~/images/foto-membro.jpg" alt="Foto" class="member-photo" />
+                        <img src="@(string.IsNullOrEmpty(Model.FotoPerfil) ? "/images/foto-membro.jpg" : Model.FotoPerfil)" alt="Foto do Membro" class="member-photo" />
                     </div>
 
                     <div class="main-info">

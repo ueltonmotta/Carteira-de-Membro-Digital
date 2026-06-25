@@ -18,30 +18,23 @@
 
             <h2 style="color: #2c5282; text-align: center; margin-top: 0; margin-bottom: 25px;">Atualizar Dados</h2>
 
-            <form asp-controller="Perfil" asp-action="SalvarEdicao" method="post">
+            <form asp-controller="Perfil" asp-action="SalvarEdicao" method="post" enctype="multipart/form-data">
+
+                <input type="hidden" name="Id" value="@Model.Id" />
+
+                <div style="margin-bottom: 20px; text-align: center;">
+
+                    <img src="@(string.IsNullOrEmpty(Model.FotoPerfil) ? "/images/foto-membro.jpg" : Model.FotoPerfil)"
+                         style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid #bba371; margin-bottom: 10px;" />
+
+                    <label style="display: block; color: #4a5568; font-size: 13px; font-weight: bold; margin-bottom: 5px;">Alterar Foto de Perfil</label>
+
+                    <input type="file" name="novaFoto" accept="image/*" style="width: 100%; padding: 10px; font-size: 13px; background: #f8fafc; border: 1px solid #cbd5e0; border-radius: 8px;" />
+                </div>
 
                 <div style="margin-bottom: 15px;">
                     <label style="display: block; color: #4a5568; font-size: 13px; font-weight: bold; margin-bottom: 5px;">Nome Completo</label>
-                    <input type="text" name="nome" value="@ViewBag.Nome" style="width: 100%; padding: 12px; border: 1px solid #cbd5e0; border-radius: 10px; font-size: 15px; box-sizing: border-box; outline: none;" required />
-                </div>
-
-                <div style="margin-bottom: 15px;">
-                    <label style="display: block; color: #4a5568; font-size: 13px; font-weight: bold; margin-bottom: 5px;">E-mail</label>
-                    <input type="email" name="email" value="@ViewBag.Email" style="width: 100%; padding: 12px; border: 1px solid #cbd5e0; border-radius: 10px; font-size: 15px; box-sizing: border-box; outline: none;" required />
-                </div>
-
-                <div style="margin-bottom: 25px;">
-                    <label style="display: block; color: #4a5568; font-size: 13px; font-weight: bold; margin-bottom: 5px;">Telefone / WhatsApp</label>
-                    <input type="text" name="telefone" value="@ViewBag.Telefone" style="width: 100%; padding: 12px; border: 1px solid #cbd5e0; border-radius: 10px; font-size: 15px; box-sizing: border-box; outline: none;" required />
-                </div>
-
-                <div style="display: flex; gap: 10px;">
-                    <a href="@Url.Action("Membro", "Perfil")" style="flex: 1; text-align: center; background: #edf2f7; color: #4a5568; text-decoration: none; padding: 14px; border-radius: 10px; font-size: 14px; font-weight: bold; border: 1px solid #cbd5e0;">
-                        Cancelar
-                    </a>
-                    <button type="submit" style="flex: 1.5; background: #2c5282; color: white; border: none; padding: 14px; border-radius: 10px; font-size: 14px; font-weight: bold; cursor: pointer;">
-                        Salvar
-                    </button>
+                    <input type="text" name="Nome" value="@Model.Nome" style="width: 100%; padding: 12px; border: 1px solid #cbd5e0; border-radius: 10px;" required />
                 </div>
             </form>
 
