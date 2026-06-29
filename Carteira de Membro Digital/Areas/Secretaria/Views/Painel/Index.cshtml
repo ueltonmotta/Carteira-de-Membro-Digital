@@ -1,0 +1,92 @@
+﻿@model List<CarteiraDeMembroDigital.Models.Usuario>
+@{
+    Layout = "~/Areas/Secretaria/Views/Shared/_LayoutSecretaria.cshtml";
+}
+
+<style>
+    /* Estilos da Tabela Larga no PC */
+    .filter-bar { display: flex; gap: 15px; margin-bottom: 25px; background: #fff; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; align-items: center; }
+    .filter-bar input, .filter-bar select { padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; font-size: 14px; }
+    .btn-search { background-color: #0d1326; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; }
+    
+    .table-responsive { width: 100%; overflow-x: auto; background: #fff; border-radius: 8px; border: 1px solid #e2e8f0; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
+    th { background-color: #f8fafc; padding: 15px; color: #4a5568; font-weight: 700; border-bottom: 2px solid #e2e8f0; }
+    td { padding: 15px; border-bottom: 1px solid #edf2f7; color: #2d3748; vertical-align: middle; }
+    tr:hover { background-color: #f8fafc; }
+
+    .badge { padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; text-transform: uppercase; display: inline-block; }
+    .badge-ativo { background-color: #c6f6d5; color: #22543d; }
+    .badge-pendente { background-color: #feebc8; color: #744210; }
+
+    .btn-table { border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; }
+    .btn-approve { background-color: #38a169; color: white; margin-right: 5px; }
+    .btn-delete { background-color: #e53e3e; color: white; }
+</style>
+
+<div style="margin-bottom: 25px;">
+    <h2 style="margin: 0; color: #0d1326;">Controle de Membresia</h2>
+    <p style="margin: 5px 0 0 0; color: #718096; font-size: 14px;">Gerencie, aprove cadastros recebidos pelo app móvel e controle a validade das credenciais.</p>
+</div>
+
+<form method="get" action="@Url.Action("Index", "Painel")" class="filter-bar">
+    <input type="text" name="busca" placeholder="Buscar por nome..." value="@ViewBag.BuscaAtual" style="flex: 1;" />
+    <select name="status">
+        <option value="">Todos os Status</option>
+        <option value="Ativo" selected="@(ViewBag.StatusAtual == "Ativo")">Ativo</option>
+        <option value="Pendente" selected="@(ViewBag.StatusAtual == "Pendente")">Pendente</option>
+    </select>
+    <button type="submit" class="btn-search"><i class="fa-solid fa-filter"></i> Filtrar</button>
+</form>
+
+<div class="table-responsive">
+    <table>
+        <thead>
+            <tr>
+                <th>Membro</th>
+                <th>Cargo</th>
+                <th>CPF</th>
+                <th>E-mail</th>
+                <th>Status</th>
+                <th>Validade</th>
+                <th style="text-align: center; width: 180px;">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (!Model.Any())
+            {
+                <tr>
+                    <td colspan="7" style="text-align: center; color: #a0aec0; padding: 30px;">Nenhum registro encontrado com os filtros aplicados.</td>
+                </tr>
+            }
+            @foreach (var membro in Model)
+            {
+                <tr>
+                    <td><strong>@membro.Nome</strong></td>
+                    <td>@(membro.Cargo ?? "Membro")</td>
+                    <td>@membro.CPF</td>
+                    <td>@membro.Email</td>
+                    <td>
+                        <span class="badge @(membro.Status == "Ativo" ? "badge-ativo" : "badge-pendente")">
+                            @(membro.Status ?? "Pendente")
+                        </span>
+                    </td>
+                    <td>@(membro.Status == "Ativo" ? membro.DataValidade.ToString("dd/MM/yyyy") : "-")</td>
+                    <td style="text-align: center;">
+                        @if (membro.Status != "Ativo")
+                        {
+                            <form asp-action="AprovarMembro" method="post" style="display: inline;">
+                                <input type="hidden" name="id" value="@membro.Id" />
+                                <button type="submit" class="btn-table btn-approve" title="Aprovar Cadastro"><i class="fa-solid fa-check"></i> Aprovar</button>
+                            </form>
+                        }
+                        <form asp-action="ExcluirMembro" method="post" style="display: inline;" onsubmit="return confirm('Tem certeza de que deseja remover este registro permanentemente?');">
+                            <input type="hidden" name="id" value="@membro.Id" />
+                            <button type="submit" class="btn-table btn-delete" title="Excluir Registro"><i class="fa-solid fa-trash-can"></i> Remover</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

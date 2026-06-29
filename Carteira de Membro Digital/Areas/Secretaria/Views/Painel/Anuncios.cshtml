@@ -1,0 +1,89 @@
+﻿@model List<CarteiraDeMembroDigital.Models.Anuncio>
+@{
+    Layout = "~/Areas/Secretaria/Views/Shared/_LayoutSecretaria.cshtml";
+}
+
+<<style>
+    /* Grid ajustado e com responsividade */
+    .dashboard-grid { display: grid; grid-template-columns: 350px 1fr; gap: 30px; align-items: start; }
+    
+    .form-group { margin-bottom: 15px; }
+    .form-group label { display: block; font-size: 13px; font-weight: 600; color: #4a5568; margin-bottom: 5px; }
+    .form-control { width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; font-family: inherit; }
+    .btn-submit { background-color: #0d1326; color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; font-weight: bold; cursor: pointer; }
+    
+    /* Tabela Responsiva */
+    .table-wrapper { overflow-x: auto; border-radius: 12px; }
+    table { width: 100%; min-width: 600px; border-collapse: collapse; text-align: left; font-size: 14px; background: #fff; }
+    th { background-color: #f8fafc; padding: 15px; color: #4a5568; border-bottom: 2px solid #e2e8f0; }
+    td { padding: 15px; border-bottom: 1px solid #edf2f7; }
+    .badge-importante { background-color: #fed7d7; color: #9b2c2c; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; }
+    .btn-delete { background-color: #e53e3e; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+
+    /* MÁGICA DA RESPONSIVIDADE: Se a tela for menor que 1100px, coloca um embaixo do outro */
+    @@media (max-width: 1100px) {
+        .dashboard-grid { grid-template-columns: 1fr; }
+    }
+</style>
+
+<div style="margin-bottom: 25px;">
+    <h2 style="margin: 0; color: #0d1326;">Quadro de Avisos</h2>
+    <p style="margin: 5px 0 0 0; color: #718096; font-size: 14px;">Publique anúncios que aparecerão imediatamente no aplicativo dos membros.</p>
+</div>
+
+<div class="dashboard-grid">
+    <div class="card" style="height: fit-content;">
+        <h3 style="margin-top: 0; font-size: 16px; border-bottom: 1px solid #edf2f7; padding-bottom: 10px;">Novo Anúncio</h3>
+        
+        <form asp-action="CriarAnuncio" method="post">
+            <div class="form-group">
+                <label>Título do Anúncio</label>
+                <input type="text" name="Titulo" class="form-control" required placeholder="Ex: Culto de Jovens" />
+            </div>
+            
+            <div class="form-group">
+                <label>Mensagem</label>
+                <textarea name="Conteudo" class="form-control" rows="4" required placeholder="Escreva os detalhes aqui..."></textarea>
+            </div>
+            
+            <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
+                <input type="checkbox" name="EhImportante" value="true" id="chkImportante" />
+                <label for="chkImportante" style="margin: 0; color: #e53e3e; cursor: pointer;">Marcar como Urgente/Importante</label>
+            </div>
+            
+            <button type="submit" class="btn-submit"><i class="fa-solid fa-paper-plane"></i> Publicar no App</button>
+        </form>
+    </div>
+
+    <div class="card table-wrapper" style="padding: 0;">
+        <table>
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Título</th>
+                    <th>Mensagem</th>
+                    <th style="text-align: center;">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var anuncio in Model)
+                {
+                    <tr>
+                        <td style="white-space: nowrap;">@anuncio.DataPublicacao.ToString("dd/MM/yyyy")</td>
+                        <td>
+                            <strong>@anuncio.Titulo</strong><br>
+                            @if (anuncio.EhImportante) { <span class="badge-importante">IMPORTANTE</span> }
+                        </td>
+                        <td style="color: #718096; max-width: 300px;">@anuncio.Conteudo</td>
+                        <td style="text-align: center;">
+                            <form asp-action="ExcluirAnuncio" method="post" onsubmit="return confirm('Apagar este anúncio?');">
+                                <input type="hidden" name="id" value="@anuncio.Id" />
+                                <button type="submit" class="btn-delete"><i class="fa-solid fa-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

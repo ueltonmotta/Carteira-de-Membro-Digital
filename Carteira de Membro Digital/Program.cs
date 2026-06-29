@@ -41,6 +41,16 @@ app.UseSession();
 
 app.UseAuthorization();
 
+// 1º LUGAR: A rota das Áreas (Secretaria)
+app.MapControllerRoute(
+    name: "areas",
+    pattern: "{area:exists}/{controller=Painel}/{action=Index}/{id?}");
+
+// 2º LUGAR: A rota padrão dos membros (Mobile)
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Conta}/{action=Login}/{id?}");
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Conta}/{action=Login}/{id?}"); // Rota padrão apontando pro seu Login
