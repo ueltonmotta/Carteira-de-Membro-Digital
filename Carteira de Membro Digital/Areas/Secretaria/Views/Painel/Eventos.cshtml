@@ -4,26 +4,52 @@
 }
 
 <style>
-    /* Grid ajustado e com responsividade */
-    .dashboard-grid { display: grid; grid-template-columns: 350px 1fr; gap: 30px; align-items: start; }
-    
-    .form-group { margin-bottom: 15px; }
-    .form-group label { display: block; font-size: 13px; font-weight: 600; color: #4a5568; margin-bottom: 5px; }
-    .form-control { width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; font-family: inherit; }
-    .btn-submit { background-color: #0d1326; color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; font-weight: bold; cursor: pointer; }
-    
-    /* Tabela Responsiva */
-    .table-wrapper { overflow-x: auto; border-radius: 12px; }
-    table { width: 100%; min-width: 600px; border-collapse: collapse; text-align: left; font-size: 14px; background: #fff; }
-    th { background-color: #f8fafc; padding: 15px; color: #4a5568; border-bottom: 2px solid #e2e8f0; }
-    td { padding: 15px; border-bottom: 1px solid #edf2f7; }
-    .badge-importante { background-color: #fed7d7; color: #9b2c2c; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; }
-    .btn-delete { background-color: #e53e3e; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
-
-    /* MÁGICA DA RESPONSIVIDADE: Se a tela for menor que 1100px, coloca um embaixo do outro */
-    @@media (max-width: 1100px) {
-        .dashboard-grid { grid-template-columns: 1fr; }
+    /* Estilos do Formulário */
+    .form-card {
+        background: #fff;
+        padding: 25px;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+        margin-bottom: 30px;
     }
+    .form-group { margin-bottom: 15px; }
+    .form-group label { display: block; font-weight: 600; color: #4a5568; margin-bottom: 5px; font-size: 14px; }
+    .form-control { width: 100%; padding: 12px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; font-family: inherit; font-size: 14px; }
+    
+    .btn-submit { 
+        background-color: #0d1326; 
+        color: white; 
+        border: none; 
+        padding: 14px 20px; 
+        border-radius: 6px; 
+        font-weight: 600; 
+        cursor: pointer; 
+        width: 100%; 
+        font-size: 15px; 
+        margin-top: 10px;
+    }
+    .btn-submit:hover { background-color: #1a2544; }
+
+    /* ========================================== */
+    /* TABELA COM SCROLL PARA TELEMÓVEIS          */
+    /* ========================================== */
+    .table-responsive { 
+        width: 100%; 
+        overflow-x: auto; /* Permite arrastar para o lado */
+        -webkit-overflow-scrolling: touch;
+        background: #fff; 
+        border-radius: 8px; 
+        border: 1px solid #e2e8f0; 
+    }
+    
+    /* O min-width força a tabela a não se esmagar */
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; min-width: 600px; }
+    th { background-color: #f8fafc; padding: 15px; color: #4a5568; font-weight: 700; border-bottom: 2px solid #e2e8f0; }
+    td { padding: 15px; border-bottom: 1px solid #edf2f7; color: #2d3748; vertical-align: middle; }
+    tr:hover { background-color: #f8fafc; }
+
+    .btn-delete { color: #e53e3e; background: none; border: none; cursor: pointer; font-size: 18px; }
+    .btn-delete:hover { color: #c53030; }
 </style>
 
 <div style="margin-bottom: 25px;">
@@ -31,67 +57,69 @@
     <p style="margin: 5px 0 0 0; color: #718096; font-size: 14px;">Programe os próximos cultos e eventos na linha do tempo dos membros.</p>
 </div>
 
-<div class="dashboard-grid">
-    <div class="card" style="height: fit-content;">
-        <h3 style="margin-top: 0; font-size: 16px; border-bottom: 1px solid #edf2f7; padding-bottom: 10px;">Agendar Novo Evento</h3>
-        
-        <form asp-action="CriarEvento" method="post">
-            <div class="form-group">
-                <label>Nome do Evento</label>
-                <input type="text" name="Titulo" class="form-control" required placeholder="Ex: Santa Ceia" />
-            </div>
+<div class="form-card">
+    <h3 style="margin-top: 0; color: #0d1326; font-size: 16px; border-bottom: 1px solid #edf2f7; padding-bottom: 10px;">Agendar Novo Evento</h3>
+    <form asp-action="CriarEvento" method="post">
+        <div class="form-group">
+            <label>Nome do Evento</label>
+            <input type="text" name="Titulo" class="form-control" placeholder="Ex: Santa Ceia" required />
+        </div>
+        <div class="form-group">
+            <label>Data e Hora</label>
+            <input type="datetime-local" name="DataHora" class="form-control" required />
+        </div>
+        <div class="form-group">
+            <label>Local / Endereço</label>
+            <input type="text" name="Local" class="form-control" placeholder="Ex: Templo Principal" required />
+        </div>
+        <div class="form-group">
+            <label>Descrição Opcional</label>
+            <textarea name="Descricao" class="form-control" rows="2" placeholder="Informações extras..."></textarea>
+        </div>
+        <button type="submit" class="btn-submit"><i class="fa-regular fa-calendar-plus"></i> Agendar Evento</button>
+    </form>
+</div>
 
-            <div class="form-group">
-                <label>Data e Hora</label>
-                <input type="datetime-local" name="DataHora" class="form-control" required />
-            </div>
-
-            <div class="form-group">
-                <label>Local / Endereço</label>
-                <input type="text" name="Local" class="form-control" required placeholder="Ex: Templo Principal" />
-            </div>
-            
-            <div class="form-group">
-                <label>Descrição Opcional</label>
-                <textarea name="Descricao" class="form-control" rows="2" placeholder="Informações extras..."></textarea>
-            </div>
-            
-            <button type="submit" class="btn-submit"><i class="fa-solid fa-calendar-plus"></i> Agendar Evento</button>
-        </form>
-    </div>
-
-    <div class="card" style="padding: 0; overflow: hidden;">
-        <table>
-            <thead>
+<div class="table-responsive">
+    <table>
+        <thead>
+            <tr>
+                <th>Data e Hora</th>
+                <th>Evento</th>
+                <th>Local</th>
+                <th style="text-align: center;">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model == null || !Model.Any())
+            {
                 <tr>
-                    <th>Data e Hora</th>
-                    <th>Evento</th>
-                    <th>Local</th>
-                    <th style="text-align: center;">Ações</th>
+                    <td colspan="4" style="text-align: center; color: #a0aec0; padding: 20px;">Nenhum evento agendado no momento.</td>
                 </tr>
-            </thead>
-            <tbody>
-                @foreach (var evento in Model)
+            }
+            else
+            {
+                foreach (var ev in Model)
                 {
                     <tr>
-                        <td style="white-space: nowrap; color: #2c5282; font-weight: bold;">
-                            @evento.DataHora.ToString("dd/MM/yyyy") <br>
-                            <span style="color: #718096; font-size: 12px; font-weight: normal;">@evento.DataHora.ToString("HH:mm")h</span>
+                        <td>
+                            <strong style="color: #0d1326;">@ev.DataHora.ToString("dd/MM/yyyy")</strong><br />
+                            <span style="color: #718096; font-size: 12px;">@ev.DataHora.ToString("HH:mm")h</span>
                         </td>
                         <td>
-                            <strong>@evento.Titulo</strong><br>
-                            <span style="color: #718096; font-size: 12px;">@evento.Descricao</span>
+                            <strong>@ev.Titulo</strong><br />
+                            <span style="color: #718096; font-size: 12px;">@ev.Descricao</span>
                         </td>
-                        <td>@evento.Local</td>
+                        <td>@ev.Local</td>
                         <td style="text-align: center;">
-                            <form asp-action="ExcluirEvento" method="post" onsubmit="return confirm('Cancelar e apagar este evento?');">
-                                <input type="hidden" name="id" value="@evento.Id" />
-                                <button type="submit" class="btn-delete"><i class="fa-solid fa-trash"></i></button>
+                            <form asp-action="ExcluirEvento" method="post" onsubmit="return confirm('Tem certeza que deseja excluir este evento da agenda?');">
+                                <input type="hidden" name="id" value="@ev.Id" />
+                                <button type="submit" class="btn-delete" title="Excluir"><i class="fa-solid fa-trash-can"></i></button>
                             </form>
                         </td>
                     </tr>
                 }
-            </tbody>
-        </table>
-    </div>
+            }
+        </tbody>
+    </table>
 </div>

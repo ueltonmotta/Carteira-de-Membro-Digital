@@ -1,0 +1,55 @@
+﻿@model List<CarteiraDeMembroDigital.Models.Usuario>
+@{
+    Layout = "~/Areas/Secretaria/Views/Shared/_LayoutSecretaria.cshtml";
+    var registros = ViewBag.Registros as List<CarteiraDeMembroDigital.Models.Presenca>;
+}
+
+<div style="margin-bottom: 25px;">
+    <h2 style="margin: 0; color: #0d1326;">Relatório de Presença</h2>
+    <p style="margin: 5px 0 0 0; color: #718096; font-size: 14px;">Controle de frequência da última Santa Ceia @ViewBag.DataCeia.</p>
+</div>
+
+<div class="table-responsive">
+    <table>
+        <thead>
+            <tr>
+                <th>Membro</th>
+                <th>Cargo</th>
+                <th>Status da Presença</th>
+                <th>Motivo (Se justificado)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Count == 0)
+            {
+                <tr><td colspan="4">@ViewBag.Mensagem</td></tr>
+            }
+            @foreach (var membro in Model)
+            {
+                var presenca = registros?.FirstOrDefault(p => p.UsuarioId == membro.Id);
+                
+                <tr>
+                    <td><strong>@membro.Nome</strong></td>
+                    <td>@(membro.Cargo ?? "Membro")</td>
+                    <td>
+                        @if (presenca == null)
+                        {
+                            <span style="background: #fed7d7; color: #9b2c2c; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold;">AUSENTE</span>
+                        }
+                        else if (presenca.Status == "Presente")
+                        {
+                            <span style="background: #c6f6d5; color: #22543d; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold;"><i class="fa-solid fa-location-dot"></i> PRESENTE (GPS)</span>
+                        }
+                        else if (presenca.Status == "Justificado")
+                        {
+                            <span style="background: #feebc8; color: #dd6b20; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold;">JUSTIFICADO</span>
+                        }
+                    </td>
+                    <td style="color: #718096; font-size: 13px; font-style: italic;">
+                        @(presenca?.Motivo ?? "-")
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

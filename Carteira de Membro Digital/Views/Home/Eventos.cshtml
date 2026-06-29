@@ -1,0 +1,69 @@
+﻿@model List<CarteiraDeMembroDigital.Models.Evento>
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ADHEL - Agenda</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        html { background-color: #2d3748; }
+        body { width: 100%; max-width: 414px; min-height: 100vh; background-color: #1a202c; margin: 0 auto; position: relative; font-family: 'Montserrat', sans-serif; color: #fff; display: flex; flex-direction: column; }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; padding: 20px 25px; background: #0d1326; border-bottom: 2px solid #bba371; }
+        .back-btn { color: #bba371; font-size: 22px; text-decoration: none; }
+        .content { padding: 20px; flex: 1; }
+    
+        /* Cartão de Evento */
+        .evento-card { background: #fff; color: #2d3748; border-radius: 15px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); border-left: 5px solid #bba371; display: flex; gap: 15px; align-items: center; }
+        .data-box { background: #0d1326; color: #bba371; padding: 12px; border-radius: 10px; text-align: center; min-width: 55px; }
+        .data-dia { font-size: 22px; font-weight: bold; display: block; line-height: 1; }
+        .data-mes { font-size: 11px; text-transform: uppercase; font-weight: 600; margin-top: 4px; display: block; }
+        
+        .evento-info { flex: 1; }
+        .evento-title { font-weight: 700; font-size: 15px; color: #0d1326; margin: 0 0 6px 0; }
+        .evento-detalhe { font-size: 12px; color: #718096; margin: 3px 0; display: flex; align-items: center; gap: 6px; }
+        .evento-desc { font-size: 12px; color: #4a5568; margin-top: 8px; background: #f8fafc; padding: 8px; border-radius: 6px; }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <a href="@Url.Action("Index", "Home")" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
+        <div style="color: #bba371; font-weight: bold; font-size: 15px;">AGENDA DA IGREJA</div>
+        <div style="width: 22px;"></div>
+    </div>
+
+    <div class="content">
+        @if (!Model.Any())
+        {
+            <p style="text-align: center; color: #a0aec0; margin-top: 40px;"><i class="fa-solid fa-calendar-xmark" style="font-size: 24px; margin-bottom: 10px; display: block;"></i>Nenhum evento agendado para os próximos dias.</p>
+        }
+        
+        @foreach (var evento in Model)
+        {
+            <div class="evento-card">
+                <div class="data-box">
+                    <span class="data-dia">@evento.DataHora.ToString("dd")</span>
+                    <span class="data-mes">@evento.DataHora.ToString("MMM")</span>
+                </div>
+                
+                <div class="evento-info">
+                    <h3 class="evento-title">@evento.Titulo</h3>
+                    <div class="evento-detalhe"><i class="fa-regular fa-clock" style="color: #a0aec0;"></i> @evento.DataHora.ToString("HH:mm")h</div>
+                    <div class="evento-detalhe"><i class="fa-solid fa-location-dot" style="color: #a0aec0;"></i> @evento.Local</div>
+                    
+                    @if (!string.IsNullOrEmpty(evento.Descricao))
+                    {
+                        <div class="evento-desc">@evento.Descricao</div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+    <link rel="stylesheet" href="~/css/site.css" />
+    <script src="~/js/site.js"></script>
+</body>
+</html>

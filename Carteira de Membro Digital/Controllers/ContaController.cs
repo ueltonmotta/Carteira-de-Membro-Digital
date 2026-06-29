@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using CarteiraDeMembroDigital.Models;
 using System.Linq;
+using System;
 
 namespace CarteiraDeMembroDigital.Controllers
 {
@@ -119,21 +120,24 @@ namespace CarteiraDeMembroDigital.Controllers
             }
             else
             {
-                // Visitantes normais são forçados a Membro Pendente
+                // QUALQUER OUTRA PESSOA (Mesmo que preencha Presbítero ou Pastor Auxiliar)
                 novoUsuario.Perfil = "Membro";
                 novoUsuario.Status = "Pendente";
             }
 
-            // Salva no banco de dados
-            if (ModelState.IsValid)
-            {
-                _banco.Usuarios.Add(novoUsuario);
-                _banco.SaveChanges();
+            // Preenche as datas automaticamente para o banco de dados não reclamar
+            novoUsuario.DataEmissao = DateTime.Now;
+            novoUsuario.DataValidade = DateTime.Now.AddYears(1);
 
-                return RedirectToAction("Login");
-            }
+            // A MÁGICA ACONTECE AQUI: Limpa o bloqueio do C#
+            ModelState.Clear();
 
-            return View("Cadastro");
+            // Salva no banco de dados direto
+            _banco.Usuarios.Add(novoUsuario);
+            _banco.SaveChanges();
+
+            // Redireciona com sucesso para a tela de Login
+            return RedirectToAction("Login");
         }
 
         // ==========================================

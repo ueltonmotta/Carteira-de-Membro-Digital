@@ -1,8 +1,6 @@
 ﻿@{
-    // Isto desliga o menu superior e o rodapé padrão, deixando a tela limpa
     Layout = null; 
 }
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -18,24 +16,25 @@
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #0d1326; /* Fundo principal escuro */
+            background-color: #0d1326; 
             color: #e2e8f0;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            padding: 20px; /* Impede que toque nas bordas do telemóvel */
+            box-sizing: border-box;
         }
 
         .cadastro-card {
-            background-color: #1a2544; /* Fundo do formulário (um pouco mais claro) */
+            background-color: #1a2544; 
             padding: 40px;
             border-radius: 12px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             width: 100%;
-            max-width: 450px;
+            max-width: 500px; 
             box-sizing: border-box;
-            margin: 20px;
-            border-top: 4px solid #bba371; /* Linha dourada no topo */
+            border-top: 4px solid #bba371; 
         }
 
         .header-text { text-align: center; margin-bottom: 30px; }
@@ -43,7 +42,6 @@
         .header-text p { color: #a0aec0; font-size: 14px; margin-top: 8px; }
 
         .form-group { margin-bottom: 18px; }
-        .form-group label { display: block; font-weight: 600; color: #cbd5e0; margin-bottom: 6px; font-size: 13px; }
         
         .form-control {
             width: 100%; padding: 14px;
@@ -53,24 +51,59 @@
             transition: border-color 0.3s;
         }
         .form-control:focus { outline: none; border-color: #bba371; }
-        .form-control::placeholder { color: #4a5568; }
+        .form-control::placeholder { color: #718096; }
+        
+        /* Ajuste de cor para os menus Select */
+        select.form-control { color: #cbd5e0; }
+        select.form-control option { color: #ffffff; background-color: #0d1326; }
 
         /* Estilo específico para o campo de código secreto */
         .input-secreto { border: 1px solid #e53e3e; background-color: #2d1818; }
         .input-secreto:focus { border-color: #fc8181; }
 
+        /* Estilo do Botão Dourado de Criar Conta */
         .btn-submit {
-            width: 100%; background-color: #bba371; color: #0d1326;
-            border: none; padding: 15px; border-radius: 8px;
-            font-size: 15px; font-weight: bold; cursor: pointer;
-            transition: background 0.3s; margin-top: 10px;
+            width: 100%;
+            padding: 16px;
+            background-color: #bba371; 
+            color: #0d1326; 
+            border: none;
+            border-radius: 30px; 
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            cursor: pointer;
+            transition: all 0.3s ease; 
+            margin-top: 20px;
         }
-        .btn-submit:hover { background-color: #a08c5b; }
+
+        .btn-submit:hover {
+            background-color: #a08c5b; 
+            transform: translateY(-2px); 
+            box-shadow: 0 6px 15px rgba(187, 163, 113, 0.4); 
+        }
 
         .erro-box {
             background-color: rgba(229, 62, 62, 0.1); border: 1px solid #e53e3e;
             color: #fc8181; padding: 12px; border-radius: 8px;
             margin-bottom: 20px; font-size: 13px; font-weight: 600; text-align: center;
+        }
+        
+        /* Estilo da linha separadora "Acesso ao Sistema" */
+        .divider {
+            text-align: center;
+            color: #a0aec0;
+            font-size: 12px;
+            margin: 25px 0 15px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid #2d3748;
+            line-height: 0.1em;
+        }
+        .divider span {
+            background: #1a2544; /* Mesma cor do fundo do card */
+            padding: 0 10px;
         }
 
         .login-link {
@@ -78,13 +111,25 @@
             color: #a0aec0; text-decoration: none; font-size: 13px; transition: color 0.3s;
         }
         .login-link:hover { color: #bba371; }
+
+        /* ========================================== */
+        /* CORREÇÃO DO FUNDO BRANCO DO AUTOFILL       */
+        /* ========================================== */
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover, 
+        input:-webkit-autofill:focus, 
+        input:-webkit-autofill:active {
+            -webkit-box-shadow: 0 0 0 30px #0d1326 inset !important;
+            -webkit-text-fill-color: #ffffff !important;
+            transition: background-color 5000s ease-in-out 0s;
+        }
     </style>
 </head>
 <body>
 
     <div class="cadastro-card">
         <div class="header-text">
-            <h2>Criar Nova Conta</h2>
+            <h2>Cadastro de Membro</h2>
             <p>Preencha os dados abaixo para aceder à ADHEL.</p>
         </div>
 
@@ -97,57 +142,84 @@
             <div class="erro-box"><i class="fa-solid fa-key"></i> @ViewBag.ErroSenha</div>
         }
 
-        <form asp-controller="Conta" asp-action="RealizarCadastro" method="post">
+       <form asp-controller="Conta" asp-action="RealizarCadastro" method="post">
             
             <div class="form-group">
-                <label>Nome Completo</label>
-                <input type="text" name="Nome" class="form-control" placeholder="Seu nome completo" required />
+                <input type="text" name="Nome" class="form-control" placeholder="Nome completo" required />
             </div>
 
             <div class="form-group">
-                <label>E-mail</label>
-                <input type="email" name="Email" class="form-control" placeholder="exemplo@email.com" required />
+                <input type="email" name="Email" class="form-control" placeholder="Seu e-mail" required />
             </div>
 
             <div style="display: flex; gap: 15px;">
                 <div class="form-group" style="flex: 1;">
-                    <label>CPF</label>
-                    <input type="text" name="CPF" class="form-control" placeholder="Apenas números" required />
+                    <input type="text" name="Telefone" class="form-control" placeholder="Telefone / WhatsApp" required />
                 </div>
                 <div class="form-group" style="flex: 1;">
-                    <label>RG</label>
-                    <input type="text" name="RG" class="form-control" placeholder="Apenas números" required />
+                    <select name="EstadoCivil" class="form-control" required>
+                        <option value="" disabled selected>Estado Civil</option>
+                        <option value="Solteiro(a)">Solteiro(a)</option>
+                        <option value="Casado(a)">Casado(a)</option>
+                        <option value="Viúvo(a)">Viúvo(a)</option>
+                        <option value="Divorciado(a)">Divorciado(a)</option>
+                    </select>
                 </div>
             </div>
 
             <div class="form-group">
-                <label>Tipo de Conta / Perfil</label>
+                <input type="text" name="Endereco" class="form-control" placeholder="Endereço completo (Rua, Nº, Bairro)" required />
+            </div>
+
+            <div style="display: flex; gap: 15px;">
+                <div class="form-group" style="flex: 1;">
+                    <input type="text" name="CPF" class="form-control" placeholder="CPF (Só números)" autocomplete="off" required />
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <input type="text" name="RG" class="form-control" placeholder="RG (Só números)" autocomplete="off" required />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <select name="Cargo" class="form-control" required>
+                    <option value="" disabled selected>Qual a sua Função Eclesiástica?</option>
+                    <option value="Membro">Membro</option>
+                    <option value="Músico">Músico</option>
+                    <option value="Missionário(a)">Missionário(a)</option>
+                    <option value="Diácono / Diaconisa">Diácono / Diaconisa</option>
+                    <option value="Presbítero">Presbítero</option>
+                    <option value="Evangelista">Evangelista</option>
+                    <option value="Pastor Auxiliar">Pastor Auxiliar</option>
+                </select>
+            </div>
+
+            <div class="divider"><span>Acesso ao Sistema</span></div>
+
+            <div class="form-group">
                 <select name="Perfil" id="perfilSelect" class="form-control" onchange="toggleCodigoSeguranca()" required>
-                    <option value="Membro">Membro da Igreja</option>
-                    <option value="Secretaria">Secretaria</option>
-                    <option value="Pastor Presidente">Pastor Presidente</option>
+                    <option value="Membro">Acesso Normal (Membro)</option>
+                    <option value="Secretaria">Acesso Administrativo (Secretaria)</option>
+                    <option value="Pastor Presidente">Acesso Total (Pastor Presidente)</option>
                 </select>
             </div>
 
             <div id="boxCodigoSeguranca" class="form-group" style="display: none;">
-                <label style="color: #fc8181;"><i class="fa-solid fa-lock"></i> Código de Liberação Admin</label>
-                <input type="password" name="codigoSeguranca" class="form-control input-secreto" placeholder="Digite o código secreto da igreja" />
+                <input type="password" name="codigoSeguranca" class="form-control input-secreto" placeholder="Código de Liberação Admin" />
             </div>
 
-            <div class="form-group">
-                <label>Senha de Acesso (6 dígitos)</label>
-                <input type="password" name="Senha" class="form-control" placeholder="Crie uma senha numérica" required />
+            <div style="display: flex; gap: 15px;">
+                <div class="form-group" style="flex: 1;">
+                    <input type="password" name="Senha" class="form-control" placeholder="Senha (6 dígitos)" required />
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <input type="password" name="confirmarSenha" class="form-control" placeholder="Repita a Senha" required />
+                </div>
             </div>
 
-            <div class="form-group" style="margin-bottom: 25px;">
-                <label>Confirmar Senha</label>
-                <input type="password" name="confirmarSenha" class="form-control" placeholder="Repita a senha numérica" required />
-            </div>
-
-            <button type="submit" class="btn-submit">Criar Minha Conta</button>
-            
-            <a href="@Url.Action("Login")" class="login-link">Já tenho uma conta. <strong>Fazer Login</strong></a>
+            <button type="submit" class="btn-submit"><i class="fa-solid fa-user-check"></i> Finalizar Cadastro</button>
         </form>
+
+        <a href="@Url.Action("Login")" class="login-link">Já tenho uma conta. <strong>Fazer Login</strong></a>
     </div>
 
     <script>

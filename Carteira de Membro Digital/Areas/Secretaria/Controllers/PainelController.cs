@@ -29,6 +29,24 @@ namespace CarteiraDeMembroDigital.Areas.Secretaria.Controllers
         }
 
         // ==========================================
+        // DASHBOARD INTERATIVA (Resumo do Sistema)
+        // ==========================================
+        public IActionResult Dashboard()
+        {
+            // Conta os dados diretamente do banco de dados
+            ViewBag.TotalMembros = _banco.Usuarios.Count();
+            ViewBag.MembrosAtivos = _banco.Usuarios.Count(u => u.Status == "Ativo");
+            ViewBag.CadastrosPendentes = _banco.Usuarios.Count(u => u.Status == "Pendente");
+
+            // Conta quantos eventos futuros existem na agenda
+            ViewBag.ProximosEventos = _banco.Eventos.Count(e => e.DataHora >= System.DateTime.Today);
+            // NOVA LINHA: Conta quantos membros precisam de atenção pastoral
+            ViewBag.MembrosEmAlerta = ObterMembrosComTresFaltasSeguidas().Count;
+
+            return View();
+        }
+
+        // ==========================================
         // 1. TELA PRINCIPAL: LISTA DE MEMBROS
         // ==========================================
         public IActionResult Index(string busca, string status)
@@ -51,6 +69,8 @@ namespace CarteiraDeMembroDigital.Areas.Secretaria.Controllers
             ViewBag.BuscaAtual = busca;
             ViewBag.StatusAtual = status;
 
+            ViewBag.MembrosAlertaIds = ObterMembrosComTresFaltasSeguidas();
+
             return View(membros);
         }
 
@@ -66,6 +86,45 @@ namespace CarteiraDeMembroDigital.Areas.Secretaria.Controllers
                 usuario.DataValidade = DateTime.Today.AddYears(1);
                 _banco.SaveChanges();
             }
+            return RedirectToAction("Index");
+        }
+
+        // ==========================================
+        // 4. AÇÃO: EDITAR DADOS DO MEMBRO
+        // ==========================================
+        [HttpGet]
+        public IActionResult EditarMembro(int id)
+        {
+            var usuario = _banco.Usuarios.Find(id);
+            if (usuario == null)
+            {
+                return RedirectToAction("Index"); // Se não achar o membro, volta pra lista
+            }
+
+            return View(usuario);
+        }
+
+        [HttpPost]
+        public IActionResult EditarMembro(Usuario usuarioAtualizado)
+        {
+            var usuarioBanco = _banco.Usuarios.Find(usuarioAtualizado.Id);
+
+            if (usuarioBanco != null)
+            {
+                // Atualiza os dados permitidos
+                usuarioBanco.Nome = usuarioAtualizado.Nome;
+                usuarioBanco.Email = usuarioAtualizado.Email;
+                usuarioBanco.CPF = usuarioAtualizado.CPF;
+                usuarioBanco.RG = usuarioAtualizado.RG;
+                usuarioBanco.Cargo = usuarioAtualizado.Cargo;
+                usuarioBanco.Status = usuarioAtualizado.Status;
+
+                // Nota: A senha não é alterada aqui por segurança. 
+                // A data de validade atualiza sozinha ao aprovar, mas pode ser editada se adicionar o campo.
+
+                _banco.SaveChanges();
+            }
+
             return RedirectToAction("Index");
         }
 
@@ -188,6 +247,37 @@ namespace CarteiraDeMembroDigital.Areas.Secretaria.Controllers
         }
 
         // ==========================================
+        // RELATÓRIO DE PRESENÇA (SANTA CEIA)
+        // ==========================================
+        public IActionResult RelatorioSantaCeia()
+        {
+            // Pega o último evento de Santa Ceia que já aconteceu ou está acontecendo
+            var ultimaCeia = _banco.Eventos
+                .Where(e => e.Titulo.Contains("Santa Ceia") && e.DataHora <= DateTime.Now.AddDays(1))
+                .OrderByDescending(e => e.DataHora)
+                .FirstOrDefault();
+
+            if (ultimaCeia == null)
+            {
+                ViewBag.Mensagem = "Nenhuma Santa Ceia registrada no sistema ainda.";
+                return View(new List<Usuario>()); // Retorna vazio
+            }
+
+            ViewBag.DataCeia = ultimaCeia.DataHora.ToString("dd/MM/yyyy");
+
+            // Busca todos os membros ativos da igreja
+            var membrosAtivos = _banco.Usuarios.Where(u => u.Status == "Ativo").ToList();
+
+            // Busca a lista de assinaturas/justificativas daquela Ceia
+            var registros = _banco.Presencas.Where(p => p.EventoId == ultimaCeia.Id).ToList();
+
+            // Passa os registros para a View usar (usando ViewBag para cruzar dados)
+            ViewBag.Registros = registros;
+
+            return View(membrosAtivos);
+        }
+
+        // ==========================================
         // SERVIÇOS: DISPARO DE E-MAIL
         // ==========================================
         private void DispararNotificacaoMembros(string titulo, string mensagemTexto)
@@ -241,6 +331,42 @@ namespace CarteiraDeMembroDigital.Areas.Secretaria.Controllers
             {
                 Console.WriteLine("Erro ao enviar e-mails: " + ex.Message);
             }
+
+
+        }
+
+        private List<int> ObterMembrosComTresFaltasSeguidas()
+        {
+            // 1. Pega os IDs das últimas 3 Santas Ceias que já aconteceram
+            var ultimas3CeiasIds = _banco.Eventos
+                .Where(e => e.Titulo.Contains("Santa Ceia") && e.DataHora <= DateTime.Now)
+                .OrderByDescending(e => e.DataHora)
+                .Take(3)
+                .Select(e => e.Id)
+                .ToList();
+
+            var membrosComAlertaIds = new List<int>();
+
+            // Se ainda não existirem pelo menos 3 Santas Ceias no sistema, não há dados para alertar
+            if (ultimas3CeiasIds.Count < 3) return membrosComAlertaIds;
+
+            // 2. Pega todos os membros ativos
+            var membrosAtivos = _banco.Usuarios.Where(u => u.Status == "Ativo").ToList();
+
+            foreach (var membro in membrosAtivos)
+            {
+                // Conta em quantas das últimas 3 Ceias este membro registou Presença ou Justificativa
+                int participacoes = _banco.Presencas
+                    .Count(p => p.UsuarioId == membro.Id && ultimas3CeiasIds.Contains(p.EventoId));
+
+                // Se o resultado for 0, significa que nas últimas 3 ceias ele não esteve presente E não justificou nenhuma
+                if (participacoes == 0)
+                {
+                    membrosComAlertaIds.Add(membro.Id);
+                }
+            }
+
+            return membrosComAlertaIds;
         }
     }
 }

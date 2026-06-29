@@ -2,7 +2,6 @@
 @{
     Layout = "~/Areas/Secretaria/Views/Shared/_LayoutSecretaria.cshtml";
 }
-
 <style>
     /* Estilos da Tabela Larga no PC */
     .filter-bar { display: flex; gap: 15px; margin-bottom: 25px; background: #fff; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; align-items: center; }
@@ -10,7 +9,10 @@
     .btn-search { background-color: #0d1326; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; }
     
     .table-responsive { width: 100%; overflow-x: auto; background: #fff; border-radius: 8px; border: 1px solid #e2e8f0; }
-    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
+    
+    /* CORREÇÃO: Adicionado min-width: 900px para forçar o scroll no telemóvel */
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; min-width: 900px; }
+    
     th { background-color: #f8fafc; padding: 15px; color: #4a5568; font-weight: 700; border-bottom: 2px solid #e2e8f0; }
     td { padding: 15px; border-bottom: 1px solid #edf2f7; color: #2d3748; vertical-align: middle; }
     tr:hover { background-color: #f8fafc; }
@@ -22,6 +24,33 @@
     .btn-table { border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; }
     .btn-approve { background-color: #38a169; color: white; margin-right: 5px; }
     .btn-delete { background-color: #e53e3e; color: white; }
+    .btn-edit { background-color: #3182ce; color: white; margin-right: 5px; }
+
+    /* ANIMAÇÃO DO ALERTA PASTORAL */
+    @@keyframes pulse {
+        0% { opacity: 0.4; }
+        50% { opacity: 1; }
+        100% { opacity: 0.4; }
+    }
+    .animate-pulse { animation: pulse 2s infinite ease-in-out; }
+
+    /* CORREÇÃO: Faz a barra de pesquisa empilhar no telemóvel para não vazar a tela */
+    @@media (max-width: 768px) {
+        .filter-bar {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        .btn-search {
+            width: 100%;
+        }
+    }
+
+    @@keyframes pulse {
+    0% { opacity: 0.4; }
+    50% { opacity: 1; }
+    100% { opacity: 0.4; }
+}
+.animate-pulse { animation: pulse 2s infinite ease-in-out; }
 </style>
 
 <div style="margin-bottom: 25px;">
@@ -62,7 +91,16 @@
             @foreach (var membro in Model)
             {
                 <tr>
-                    <td><strong>@membro.Nome</strong></td>
+                    <td>
+                        <strong>@membro.Nome</strong>
+                        
+                        @if (ViewBag.MembrosAlertaIds != null && ((List<int>)ViewBag.MembrosAlertaIds).Contains(membro.Id))
+                        {
+                            <span style="background-color: #fed7d7; color: #9b2c2c; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: bold; margin-left: 8px; display: inline-flex; align-items: center; gap: 4px;" title="Ausente por 3 Ceias seguidas! Necessita de contacto.">
+                                <i class="fa-solid fa-phone-volume animate-pulse"></i> Visita Pastoral
+                            </span>
+                        }
+                    </td>
                     <td>@(membro.Cargo ?? "Membro")</td>
                     <td>@membro.CPF</td>
                     <td>@membro.Email</td>
@@ -72,7 +110,10 @@
                         </span>
                     </td>
                     <td>@(membro.Status == "Ativo" ? membro.DataValidade.ToString("dd/MM/yyyy") : "-")</td>
-                    <td style="text-align: center;">
+                   <td style="text-align: center; white-space: nowrap;">
+                        
+                        <a href="@Url.Action("EditarMembro", new { id = membro.Id })" class="btn-table btn-edit" title="Editar Cadastro"><i class="fa-solid fa-pen"></i> Editar</a>
+
                         @if (membro.Status != "Ativo")
                         {
                             <form asp-action="AprovarMembro" method="post" style="display: inline;">
@@ -80,6 +121,7 @@
                                 <button type="submit" class="btn-table btn-approve" title="Aprovar Cadastro"><i class="fa-solid fa-check"></i> Aprovar</button>
                             </form>
                         }
+                        
                         <form asp-action="ExcluirMembro" method="post" style="display: inline;" onsubmit="return confirm('Tem certeza de que deseja remover este registro permanentemente?');">
                             <input type="hidden" name="id" value="@membro.Id" />
                             <button type="submit" class="btn-table btn-delete" title="Excluir Registro"><i class="fa-solid fa-trash-can"></i> Remover</button>

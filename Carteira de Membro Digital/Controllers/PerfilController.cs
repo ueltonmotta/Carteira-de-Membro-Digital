@@ -22,16 +22,24 @@ namespace CarteiraDeMembroDigital.Controllers
         // ==========================================
         public IActionResult Membro()
         {
-            // Como ainda não ativamos o sistema de "Sessão" (Login real), 
-            // vamos pegar o último usuário que você cadastrou no banco para testar a tela:
-            var usuario = _banco.Usuarios.OrderByDescending(u => u.Id).FirstOrDefault();
+            // CORREÇÃO: Pega o ID de quem está logado de verdade
+            var usuarioIdStr = HttpContext.Session.GetString("UsuarioId");
+
+            if (string.IsNullOrEmpty(usuarioIdStr))
+            {
+                return RedirectToAction("Login", "Conta"); // Se não estiver logado, bloqueia
+            }
+
+            int id = int.Parse(usuarioIdStr);
+            var usuario = _banco.Usuarios.FirstOrDefault(u => u.Id == id);
 
             if (usuario == null)
             {
-                return RedirectToAction("Login", "Conta"); // Se não tiver ninguém, volta pro login
+                HttpContext.Session.Clear();
+                return RedirectToAction("Login", "Conta");
             }
 
-            // Envia os dados verdadeiros do banco para a tela do celular
+            // Envia os dados verdadeiros do usuário logado para a tela do celular
             ViewBag.Nome = usuario.Nome;
             ViewBag.Cargo = usuario.Cargo ?? "Membro";
             ViewBag.Email = usuario.Email;
@@ -46,12 +54,30 @@ namespace CarteiraDeMembroDigital.Controllers
         // ==========================================
         public IActionResult Administrador()
         {
-            ViewBag.Nome = "Pr. João Marcos";
-            ViewBag.Cargo = "Pastor Presidente";
+            // CORREÇÃO: Garante segurança para que só quem está logado aceda
+            var usuarioIdStr = HttpContext.Session.GetString("UsuarioId");
+            var perfilLogado = HttpContext.Session.GetString("UsuarioPerfil");
+
+            if (string.IsNullOrEmpty(usuarioIdStr) || (perfilLogado != "Secretaria" && perfilLogado != "Pastor Presidente"))
+            {
+                return RedirectToAction("Login", "Conta");
+            }
+
+            int id = int.Parse(usuarioIdStr);
+            var usuario = _banco.Usuarios.FirstOrDefault(u => u.Id == id);
+
+            if (usuario == null)
+            {
+                HttpContext.Session.Clear();
+                return RedirectToAction("Login", "Conta");
+            }
+
+            ViewBag.Nome = usuario.Nome;
+            ViewBag.Cargo = usuario.Perfil ?? "Pastor Presidente";
 
             // Conta automaticamente quantos membros existem no banco de dados
-            ViewBag.MembrosAtivos = _banco.Usuarios.Count();
-            ViewBag.ValidacoesPendentes = 12;
+            ViewBag.MembrosAtivos = _banco.Usuarios.Count(u => u.Status == "Ativo");
+            ViewBag.ValidacoesPendentes = _banco.Usuarios.Count(u => u.Status == "Pendente");
 
             return View();
         }
@@ -61,8 +87,17 @@ namespace CarteiraDeMembroDigital.Controllers
         // ==========================================
         public IActionResult Editar()
         {
-            // Pega o mesmo último usuário para editar
-            var usuario = _banco.Usuarios.OrderByDescending(u => u.Id).FirstOrDefault();
+            // CORREÇÃO: Garante que o membro edita apenas a sua própria conta
+            var usuarioIdStr = HttpContext.Session.GetString("UsuarioId");
+
+            if (string.IsNullOrEmpty(usuarioIdStr))
+            {
+                return RedirectToAction("Login", "Conta");
+            }
+
+            int id = int.Parse(usuarioIdStr);
+            var usuario = _banco.Usuarios.FirstOrDefault(u => u.Id == id);
+
             if (usuario == null) return NotFound();
 
             return View(usuario);
@@ -74,6 +109,13 @@ namespace CarteiraDeMembroDigital.Controllers
         [HttpPost]
         public async Task<IActionResult> SalvarEdicao(int Id, string Nome, string Telefone, string RG, string CPF, string EstadoCivil, string Conjuge, IFormFile? novaFoto)
         {
+            // Segurança extra: impede que alterem o ID na requisição para editar outra pessoa
+            var usuarioIdStr = HttpContext.Session.GetString("UsuarioId");
+            if (string.IsNullOrEmpty(usuarioIdStr) || Id.ToString() != usuarioIdStr)
+            {
+                return RedirectToAction("Login", "Conta");
+            }
+
             var usuario = _banco.Usuarios.Find(Id);
             if (usuario == null) return NotFound();
 
@@ -103,6 +145,9 @@ namespace CarteiraDeMembroDigital.Controllers
             }
 
             _banco.SaveChanges();
+
+            // Atualiza o nome na sessão caso tenha sido alterado
+            HttpContext.Session.SetString("UsuarioNome", usuario.Nome);
 
             return RedirectToAction("Membro");
         }

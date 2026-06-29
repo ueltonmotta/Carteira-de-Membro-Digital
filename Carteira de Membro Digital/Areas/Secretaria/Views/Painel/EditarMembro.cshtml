@@ -1,0 +1,73 @@
+﻿@model CarteiraDeMembroDigital.Models.Usuario
+@{
+    Layout = "~/Areas/Secretaria/Views/Shared/_LayoutSecretaria.cshtml";
+}
+
+<style>
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .form-group { margin-bottom: 15px; }
+    .form-group label { display: block; font-size: 13px; font-weight: 600; color: #4a5568; margin-bottom: 5px; }
+    .form-control { width: 100%; padding: 12px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; font-family: inherit; font-size: 14px; }
+    .btn-submit { background-color: #3182ce; color: white; border: none; padding: 12px 25px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px; }
+    .btn-cancel { background-color: #e2e8f0; color: #4a5568; padding: 12px 25px; border-radius: 6px; font-weight: bold; text-decoration: none; font-size: 14px; display: inline-block; margin-left: 10px; }
+</style>
+
+<div style="margin-bottom: 25px;">
+    <h2 style="margin: 0; color: #0d1326;">Editar Dados do Membro</h2>
+    <p style="margin: 5px 0 0 0; color: #718096; font-size: 14px;">Atualize as informações cadastrais e eclesiásticas deste membro.</p>
+</div>
+
+<div class="card">
+    <form asp-action="EditarMembro" method="post">
+        <input type="hidden" name="Id" value="@Model.Id" />
+
+        <h3 style="font-size: 16px; border-bottom: 1px solid #edf2f7; padding-bottom: 10px; margin-top: 0;">Dados Pessoais</h3>
+        
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Nome Completo</label>
+                <input type="text" name="Nome" class="form-control" value="@Model.Nome" required />
+            </div>
+            <div class="form-group">
+                <label>E-mail</label>
+                <input type="email" name="Email" class="form-control" value="@Model.Email" required />
+            </div>
+            <div class="form-group">
+                <label>CPF</label>
+                <input type="text" name="CPF" class="form-control" value="@Model.CPF" required />
+            </div>
+            <div class="form-group">
+                <label>RG</label>
+                <input type="text" name="RG" class="form-control" value="@Model.RG" required />
+            </div>
+        </div>
+
+        <h3 style="font-size: 16px; border-bottom: 1px solid #edf2f7; padding-bottom: 10px; margin-top: 20px;">Dados Eclesiásticos</h3>
+
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Cargo Ministerial</label>
+                <select name="Cargo" class="form-control">
+                    <option value="Membro" selected="@(Model.Cargo == "Membro")">Membro</option>
+                    <option value="Diácono" selected="@(Model.Cargo == "Diácono")">Diácono</option>
+                    <option value="Presbítero" selected="@(Model.Cargo == "Presbítero")">Presbítero</option>
+                    <option value="Evangelista" selected="@(Model.Cargo == "Evangelista")">Evangelista</option>
+                    <option value="Pastor" selected="@(Model.Cargo == "Pastor")">Pastor</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Status da Conta</label>
+                <select name="Status" class="form-control">
+                    <option value="Ativo" selected="@(Model.Status == "Ativo")">Ativo</option>
+                    <option value="Pendente" selected="@(Model.Status == "Pendente")">Pendente</option>
+                    <option value="Inativo" selected="@(Model.Status == "Inativo")">Inativo / Transferido</option>
+                </select>
+            </div>
+        </div>
+
+        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #edf2f7;">
+            <button type="submit" class="btn-submit"><i class="fa-solid fa-floppy-disk"></i> Salvar Alterações</button>
+            <a href="@Url.Action("Index")" class="btn-cancel">Cancelar</a>
+        </div>
+    </form>
+</div>

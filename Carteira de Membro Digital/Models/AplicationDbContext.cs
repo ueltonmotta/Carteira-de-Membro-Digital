@@ -14,5 +14,6 @@ namespace CarteiraDeMembroDigital.Models
 
         public DbSet<Anuncio> Anuncios { get; set; }
         public DbSet<Evento> Eventos { get; set; }
+        public DbSet<Presenca> Presencas { get; set; }
     }
 }
