@@ -1,286 +1,166 @@
 ﻿@{
-    ViewData["Title"] = "Ficha de Membro - ADHEL";
-    Layout = null;
+    // Isto desliga o menu superior e o rodapé padrão, deixando a tela limpa
+    Layout = null; 
 }
 
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>@ViewData["Title"]</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Criar Conta - ADHEL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
     <style>
-            body {
-                background-color: #0d1326;
-                margin: 0;
-                font-family: 'Montserrat', sans-serif;
-                display: flex;
-                justify-content: center;
-                padding: 20px 0;
-            }
+        /* TEMA ESCURO (DARK MODE) */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0d1326; /* Fundo principal escuro */
+            color: #e2e8f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
 
-            .container {
-                width: 100%;
-                max-width: 440px;
-                padding: 10px;
-            }
+        .cadastro-card {
+            background-color: #1a2544; /* Fundo do formulário (um pouco mais claro) */
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            width: 100%;
+            max-width: 450px;
+            box-sizing: border-box;
+            margin: 20px;
+            border-top: 4px solid #bba371; /* Linha dourada no topo */
+        }
 
-            .card {
-                background: #fff;
-                border-radius: 20px;
-                padding: 30px;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            }
+        .header-text { text-align: center; margin-bottom: 30px; }
+        .header-text h2 { margin: 0; color: #ffffff; font-size: 24px; }
+        .header-text p { color: #a0aec0; font-size: 14px; margin-top: 8px; }
 
-            .logo {
-                width: 120px;
-                display: block;
-                margin: 0 auto 15px;
-                border-radius: 10px;
-            }
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; font-weight: 600; color: #cbd5e0; margin-bottom: 6px; font-size: 13px; }
+        
+        .form-control {
+            width: 100%; padding: 14px;
+            background-color: #0d1326; border: 1px solid #2d3748;
+            color: #ffffff; border-radius: 8px;
+            box-sizing: border-box; font-size: 14px; font-family: inherit;
+            transition: border-color 0.3s;
+        }
+        .form-control:focus { outline: none; border-color: #bba371; }
+        .form-control::placeholder { color: #4a5568; }
 
-            h2 {
-                color: #0d1326;
-                text-align: center;
-                margin-bottom: 25px;
-                font-size: 22px;
-                font-weight: 700;
-            }
+        /* Estilo específico para o campo de código secreto */
+        .input-secreto { border: 1px solid #e53e3e; background-color: #2d1818; }
+        .input-secreto:focus { border-color: #fc8181; }
 
-            label {
-                display: block;
-                color: #4a5568;
-                font-size: 11px;
-                font-weight: bold;
-                margin-bottom: 5px;
-                text-transform: uppercase;
-                letter-spacing: 0.5px;
-            }
+        .btn-submit {
+            width: 100%; background-color: #bba371; color: #0d1326;
+            border: none; padding: 15px; border-radius: 8px;
+            font-size: 15px; font-weight: bold; cursor: pointer;
+            transition: background 0.3s; margin-top: 10px;
+        }
+        .btn-submit:hover { background-color: #a08c5b; }
 
-            input, select {
-                width: 100%;
-                padding: 12px;
-                border: 1px solid #cbd5e0;
-                border-radius: 10px;
-                font-size: 15px;
-                box-sizing: border-box;
-                outline: none;
-                margin-bottom: 15px;
-                background: #f7fafc;
-                font-family: 'Montserrat', sans-serif;
-            }
+        .erro-box {
+            background-color: rgba(229, 62, 62, 0.1); border: 1px solid #e53e3e;
+            color: #fc8181; padding: 12px; border-radius: 8px;
+            margin-bottom: 20px; font-size: 13px; font-weight: 600; text-align: center;
+        }
 
-                input:focus, select:focus {
-                    border-color: #0d1326;
-                    background: #fff;
-                }
-
-            .section-title {
-                color: #bba371;
-                font-size: 13px;
-                font-weight: 700;
-                margin: 20px 0 15px;
-                border-bottom: 2px solid #f0f4f8;
-                padding-bottom: 5px;
-                text-transform: uppercase;
-                letter-spacing: 1px;
-            }
-
-            .row {
-                display: flex;
-                gap: 12px;
-            }
-
-            .col {
-                flex: 1;
-            }
-
-            button {
-                width: 100%;
-                background: #0d1326;
-                color: white;
-                border: none;
-                padding: 16px;
-                border-radius: 10px;
-                font-size: 16px;
-                font-weight: bold;
-                cursor: pointer;
-                margin-top: 15px;
-                box-shadow: 0 4px 12px rgba(13, 19, 38, 0.3);
-            }
-
-            .error-msg {
-                background-color: #fed7d7;
-                color: #9b2c2c;
-                padding: 12px;
-                border-radius: 10px;
-                font-size: 13px;
-                margin-bottom: 15px;
-                font-weight: bold;
-                text-align: center;
-            }
-
-            #divConjuge {
-                display: none;
-            }
-            /* Escondido por padrão */
+        .login-link {
+            display: block; text-align: center; margin-top: 25px;
+            color: #a0aec0; text-decoration: none; font-size: 13px; transition: color 0.3s;
+        }
+        .login-link:hover { color: #bba371; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="card">
-            <img src="~/images/logo-adhel.jpeg" class="logo" alt="ADHEL" />
-            <h2>Ficha de Cadastro Ministerial</h2>
-
-            @if (ViewBag.ErroSenha != null)
-            {
-                <div class="error-msg">@ViewBag.ErroSenha</div>
-            }
-
-            <form asp-controller="Conta" asp-action="RealizarCadastro" method="post">
-
-                <div class="section-title">1. Dados de Acesso</div>
-                <label>E-mail (Seu Login)</label>
-                <input type="email" name="Email" placeholder="exemplo@email.com" required />
-
-                <div class="row">
-                    <div class="col">
-                        <label>Senha (6 dígitos)</label>
-                        <input type="password" name="Senha" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="******" required />
-                    </div>
-                    <div class="col">
-                        <label>Confirmar Senha</label>
-                        <input type="password" name="confirmarSenha" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="******" required />
-                    </div>
-                </div>
-
-                <div class="section-title">2. Identificação Pessoal</div>
-
-                <label>Nome Completo</label>
-                <input type="text" name="Nome" required />
-
-                <div class="row">
-                    <div class="col">
-                        <label>Data de Nascimento</label>
-                        <input type="date" name="DataNascimento" required />
-                    </div>
-                    <div class="col">
-                        <label>Nacionalidade</label>
-                        <input type="text" name="Nacionalidade" value="Brasileira" required />
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col">
-                        <label>RG</label>
-                        <input type="text" name="RG" maxlength="14" onkeyup="mascaraRG(this)" required />
-                    </div>
-                    <div class="col">
-                        <label>CPF</label>
-                        <input type="text" name="CPF" maxlength="14" onkeyup="mascaraCPF(this)" required />
-                    </div>
-                </div>
-
-                <label>Telefone / WhatsApp</label>
-                <input type="tel" name="Telefone" placeholder="(00) 00000-0000" required />
-
-                <label>Estado Civil</label>
-                <select name="EstadoCivil" id="estadoCivilSelect" onchange="verificarEstadoCivil()">
-                    <option value="Solteiro(a)">Solteiro(a)</option>
-                    <option value="Casado(a)">Casado(a)</option>
-                    <option value="Divorciado(a)">Divorciado(a)</option>
-                    <option value="Viúvo(a)">Viúvo(a)</option>
-                </select>
-
-                <div id="divConjuge">
-                    <label>Nome do Cônjuge (Esposo/Esposa)</label>
-                    <input type="text" name="Conjuge" id="inputConjuge" />
-                </div>
-
-                <div class="section-title">3. Filiação</div>
-
-                <label>Nome do Pai</label>
-                <input type="text" name="NomePai" placeholder="Nome completo do pai" />
-
-                <label>Nome da Mãe</label>
-                <input type="text" name="NomeMae" placeholder="Nome completo da mãe" required />
-
-                <div class="section-title">4. Dados Eclesiásticos</div>
-
-                <div class="row">
-                    <div class="col">
-                        <label>Cargo / Função</label>
-                        <input type="text" name="Cargo" placeholder="Ex: Membro, Diácono" required />
-                    </div>
-                    <div class="col">
-                        <label>Data de Batismo</label>
-                        <input type="date" name="DataBatismo" required />
-                    </div>
-                </div>
-
-                <label>Perfil de Sistema</label>
-                <select name="Perfil">
-                    <option value="Membro">Membro</option>
-                    <option value="Membro">Diácono</option>
-                    <option value="Membro">Presbítero</option>
-                    <option value="Membro">Evangelista</option>
-                    <option value="Membro">Pastor Adjunto</option>
-                    <option value="Admin">Pastor Presidente</option>
-                </select>
-
-                <button type="submit">Finalizar e Criar Conta</button>
-            </form>
-
-            <p style="text-align: center; margin-top: 20px; font-size: 14px; color: #4a5568;">
-                Já tem cadastro? <a href="@Url.Action("Login", "Conta")" style="color: #2c5282; font-weight: bold; text-decoration: none;">Fazer Login</a>
-            </p>
+    <div class="cadastro-card">
+        <div class="header-text">
+            <h2>Criar Nova Conta</h2>
+            <p>Preencha os dados abaixo para aceder à ADHEL.</p>
         </div>
+
+        @if (ViewBag.Erro != null)
+        {
+            <div class="erro-box"><i class="fa-solid fa-circle-exclamation"></i> @ViewBag.Erro</div>
+        }
+        @if (ViewBag.ErroSenha != null)
+        {
+            <div class="erro-box"><i class="fa-solid fa-key"></i> @ViewBag.ErroSenha</div>
+        }
+
+        <form asp-controller="Conta" asp-action="RealizarCadastro" method="post">
+            
+            <div class="form-group">
+                <label>Nome Completo</label>
+                <input type="text" name="Nome" class="form-control" placeholder="Seu nome completo" required />
+            </div>
+
+            <div class="form-group">
+                <label>E-mail</label>
+                <input type="email" name="Email" class="form-control" placeholder="exemplo@email.com" required />
+            </div>
+
+            <div style="display: flex; gap: 15px;">
+                <div class="form-group" style="flex: 1;">
+                    <label>CPF</label>
+                    <input type="text" name="CPF" class="form-control" placeholder="Apenas números" required />
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label>RG</label>
+                    <input type="text" name="RG" class="form-control" placeholder="Apenas números" required />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Tipo de Conta / Perfil</label>
+                <select name="Perfil" id="perfilSelect" class="form-control" onchange="toggleCodigoSeguranca()" required>
+                    <option value="Membro">Membro da Igreja</option>
+                    <option value="Secretaria">Secretaria</option>
+                    <option value="Pastor Presidente">Pastor Presidente</option>
+                </select>
+            </div>
+
+            <div id="boxCodigoSeguranca" class="form-group" style="display: none;">
+                <label style="color: #fc8181;"><i class="fa-solid fa-lock"></i> Código de Liberação Admin</label>
+                <input type="password" name="codigoSeguranca" class="form-control input-secreto" placeholder="Digite o código secreto da igreja" />
+            </div>
+
+            <div class="form-group">
+                <label>Senha de Acesso (6 dígitos)</label>
+                <input type="password" name="Senha" class="form-control" placeholder="Crie uma senha numérica" required />
+            </div>
+
+            <div class="form-group" style="margin-bottom: 25px;">
+                <label>Confirmar Senha</label>
+                <input type="password" name="confirmarSenha" class="form-control" placeholder="Repita a senha numérica" required />
+            </div>
+
+            <button type="submit" class="btn-submit">Criar Minha Conta</button>
+            
+            <a href="@Url.Action("Login")" class="login-link">Já tenho uma conta. <strong>Fazer Login</strong></a>
+        </form>
     </div>
 
     <script>
-            function verificarEstadoCivil() {
-                var select = document.getElementById("estadoCivilSelect");
-                var divConjuge = document.getElementById("divConjuge");
-                var inputConjuge = document.getElementById("inputConjuge");
-
-                if (select.value === "Casado(a)") {
-                    divConjuge.style.display = "block";
-                    inputConjuge.required = true; // Torna obrigatório se for casado
-                } else {
-                    divConjuge.style.display = "none";
-                    inputConjuge.required = false;
-                    inputConjuge.value = ""; // Limpa o campo se mudar de ideia
-                }
+        function toggleCodigoSeguranca() {
+            var perfil = document.getElementById("perfilSelect").value;
+            var boxCodigo = document.getElementById("boxCodigoSeguranca");
+            
+            if (perfil === "Secretaria" || perfil === "Pastor Presidente") {
+                boxCodigo.style.display = "block";
+            } else {
+                boxCodigo.style.display = "none";
             }
-    </script>
-
-    <script>
-            // Formata o CPF: 000.000.000-00
-            function mascaraCPF(input) {
-                let v = input.value.replace(/\D/g, ""); // Remove tudo o que não for número
-        
-                if (v.length <= 11) {
-                    v = v.replace(/(\d{3})(\d)/, "$1.$2");
-                    v = v.replace(/(\d{3})(\d)/, "$1.$2");
-                    v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
-                }
-        
-                input.value = v;
-            }
-
-            // Formata o RG: Deixa o texto em maiúsculas (para o X) e formata genericamente
-            function mascaraRG(input) {
-                let v = input.value.toUpperCase().replace(/[^\w\s]/gi, ''); // Remove símbolos especiais
-        
-                // Se quiser uma formatação pontuada genérica, pode usar:
-                // v = v.replace(/(\d{2})(\d)/, "$1.$2");
-                // v = v.replace(/(\d{3})(\d)/, "$1.$2");
-                // v = v.replace(/(\d{3})([a-zA-Z0-9]{1})$/, "$1-$2");
-        
-                input.value = v;
-            }
+        }
     </script>
 </body>
 </html>

@@ -1,62 +1,227 @@
 ﻿@{
-    ViewData["Title"] = "Login - ADHEL";
-    Layout = null;
+    Layout = null; // Remove o menu superior padrão
 }
 
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>@ViewData["Title"]</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - ADHEL</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
-    <head>
-        <link rel="manifest" href="/manifest.json">
-
-        <meta name="theme-color" content="#0d1326">
-        <link rel="apple-touch-icon" href="/images/icone-192.png">
-        
-    </head>
-
-</head>
-<body style="background-color: #0d1326; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; font-family: 'Montserrat', sans-serif;">
-
-    <div style="width: 100%; max-width: 400px; padding: 20px; text-align: center;">
-
-        
-        <div style="background: #fff; border-radius: 20px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: left;">
-            <h2 style="color: #0d1326; margin-top: 0; margin-bottom: 25px; text-align: center;">Bem-vindo</h2>
-
-            <form asp-controller="Conta" asp-action="Login" method="post">
-                <div style="margin-bottom: 15px;">
-                    <label style="display: block; color: #4a5568; font-size: 13px; font-weight: bold; margin-bottom: 5px;">E-mail</label>
-                    <input type="email" name="email" placeholder="seu@email.com" style="width: 100%; padding: 12px; border: 1px solid #cbd5e0; border-radius: 10px; font-size: 15px; box-sizing: border-box; outline: none;" required />
-                </div>
-
-                <div style="margin-bottom: 10px;">
-                    <label style="display: block; color: #4a5568; font-size: 13px; font-weight: bold; margin-bottom: 5px;">Senha</label>
-                    <input type="password" name="senha" placeholder="••••••••" style="width: 100%; padding: 12px; border: 1px solid #cbd5e0; border-radius: 10px; font-size: 15px; box-sizing: border-box; outline: none;" required />
-                </div>
-
-                <div style="text-align: right; margin-bottom: 25px;">
-                    <a href="@Url.Action("RecuperarSenha", "Conta")" style="color: #2c5282; font-size: 13px; text-decoration: none; font-weight: bold;">Esqueceu a senha?</a>
-                </div>
-
-                <button type="submit" style="width: 100%; background: #0d1326; color: white; border: none; padding: 15px; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer;">
-                    Entrar
-                </button>
-            </form>
-
-            <p style="text-align: center; margin-top: 20px; font-size: 14px; color: #4a5568;">
-                Não tem conta? <a href="@Url.Action("Cadastro", "Conta")" style="color: #2c5282; font-weight: bold; text-decoration: none;">Cadastre-se</a>
-            </p>
-        </div>
-    </div>
-    <script>
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('/sw.js')
-                    .then(() => console.log("Service Worker Registrado!"));
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+            body {
+                margin: 0;
+                padding: 0;
+                font-family: 'Montserrat', sans-serif;
+                background-color: #fdfdfc; /* Cor de fundo clara para a direita */
             }
-    </script>
+
+            /* Estrutura de Ecrã Dividido */
+            .split-layout {
+                display: flex;
+                min-height: 100vh;
+                flex-wrap: wrap;
+            }
+
+            /* LADO ESQUERDO (Azul Institucional) */
+            .left-side {
+                flex: 1;
+                min-width: 300px;
+                background-color: #0d1326; /* Azul do sistema original */
+                color: white;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                padding: 40px;
+                text-align: center;
+            }
+
+            .logo-img {
+                max-width: 250px; /* Tamanho da logo ajustável */
+                margin-bottom: 30px;
+                border-radius: 10px; /* Suaviza as bordas da imagem jpeg */
+            }
+
+            .welcome-title {
+                font-size: 32px;
+                font-weight: 700;
+                margin-bottom: 10px;
+                color: #bba371; /* Dourado do sistema original */
+            }
+
+            .welcome-subtitle {
+                font-size: 18px;
+                color: #cbd5e0;
+                font-weight: 400;
+                max-width: 350px;
+                line-height: 1.5;
+            }
+
+            /* LADO DIREITO (Formulário Claro) */
+            .right-side {
+                flex: 1;
+                min-width: 300px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                padding: 40px;
+            }
+
+            .form-wrapper {
+                width: 100%;
+                max-width: 380px;
+            }
+
+            .form-control {
+                width: 100%;
+                padding: 16px 24px;
+                margin-bottom: 20px;
+                border: 1px solid #e2e8f0;
+                border-radius: 30px; /* Caixas arredondadas iguais à referência */
+                background-color: #f8fafc;
+                box-sizing: border-box;
+                font-size: 15px;
+                font-family: inherit;
+                color: #2d3748;
+                transition: border-color 0.3s;
+            }
+
+                .form-control:focus {
+                    outline: none;
+                    border-color: #0d1326;
+                    background-color: #fff;
+                }
+
+            /* Botões */
+            .btn-primary {
+                width: 100%;
+                padding: 16px;
+                background-color: #0d1326;
+                color: white;
+                border: none;
+                border-radius: 30px;
+                font-size: 16px;
+                font-weight: 700;
+                cursor: pointer;
+                transition: background 0.3s;
+                margin-bottom: 25px;
+            }
+
+                .btn-primary:hover {
+                    background-color: #1a2544;
+                }
+
+            .btn-outline {
+                width: 100%;
+                padding: 14px;
+                background-color: transparent;
+                color: #0d1326;
+                border: 2px solid #0d1326;
+                border-radius: 30px;
+                font-size: 16px;
+                font-weight: 700;
+                cursor: pointer;
+                text-decoration: none;
+                display: inline-block;
+                text-align: center;
+                box-sizing: border-box;
+                transition: background 0.3s;
+            }
+
+                .btn-outline:hover {
+                    background-color: #edf2f7;
+                }
+
+            .forgot-link {
+                display: block;
+                text-align: center;
+                color: #0d1326;
+                font-size: 14px;
+                font-weight: 600;
+                text-decoration: none;
+                margin-bottom: 25px;
+            }
+
+            .divider {
+                text-align: center;
+                color: #a0aec0;
+                font-size: 13px;
+                margin-bottom: 15px;
+            }
+
+            /* Caixa de Erro */
+            .erro-box {
+                background-color: #fed7d7;
+                color: #9b2c2c;
+                padding: 12px 20px;
+                border-radius: 12px;
+                margin-bottom: 25px;
+                font-size: 14px;
+                font-weight: 600;
+                text-align: center;
+            }
+
+            /* Responsividade para telemóveis */
+            @@media (max-width: 768px) {
+                .split-layout {
+                    flex-direction: column;
+                }
+
+                .left-side {
+                    padding: 60px 20px;
+                    min-height: 40vh;
+                }
+
+                .right-side {
+                    padding: 40px 20px;
+                }
+            }
+    </style>
+</head>
+<body>
+
+    <div class="split-layout">
+        
+        <div class="left-side">
+            <img src="~/images/logo.jpeg" alt="Logo ADHEL" class="logo-img" />
+            
+            <h1 class="welcome-title">Bem-vindo à ADHEL!</h1>
+            <p class="welcome-subtitle">Vivendo a verdade de Cristo</p>
+        </div>
+
+        <div class="right-side">
+            <div class="form-wrapper">
+                
+                @if (ViewBag.Erro != null)
+                {
+                    <div class="erro-box">
+                        <i class="fa-solid fa-circle-exclamation"></i> @ViewBag.Erro
+                    </div>
+                }
+
+                <form asp-controller="Conta" asp-action="Login" method="post">
+                    
+                    <input type="email" name="email" class="form-control" placeholder="Seu e-mail" required />
+                    
+                    <input type="password" name="senha" class="form-control" placeholder="Sua senha" required />
+                    
+                    <a href="#" class="forgot-link">Esqueci minha senha</a>
+
+                    <button type="submit" class="btn-primary">Login</button>
+                </form>
+
+                <div class="divider">Não tem cadastro?</div>
+                
+                <a href="@Url.Action("Cadastro")" class="btn-outline">Se cadastrar.</a>
+            </div>
+        </div>
+
+    </div>
+
 </body>
 </html>
