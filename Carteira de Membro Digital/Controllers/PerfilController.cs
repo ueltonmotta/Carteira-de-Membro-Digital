@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using System.IO;
 using System.Threading.Tasks;
 using System;
-using CarteiraDeMembroDigital.Models; // Para acessar o banco
+using CarteiraDeMembroDigital.Models;
 using System.Linq;
 
 namespace CarteiraDeMembroDigital.Controllers
@@ -17,53 +17,93 @@ namespace CarteiraDeMembroDigital.Controllers
             _banco = banco;
         }
 
-        // ... suas outras rotas de Membro() e Administrador() continuam aqui ...
-
-        // TELA DE EDIÇÃO
-        public IActionResult Editar(int id)
+        // ==========================================
+        // 1. TELA DO PERFIL DO MEMBRO
+        // ==========================================
+        public IActionResult Membro()
         {
-            // Busca o usuário real no banco (Você pode pegar o ID da sessão depois)
-            var usuario = _banco.Usuarios.FirstOrDefault(u => u.Id == id);
+            // Como ainda não ativamos o sistema de "Sessão" (Login real), 
+            // vamos pegar o último usuário que você cadastrou no banco para testar a tela:
+            var usuario = _banco.Usuarios.OrderByDescending(u => u.Id).FirstOrDefault();
 
-            if (usuario == null) return NotFound();
+            if (usuario == null)
+            {
+                return RedirectToAction("Login", "Conta"); // Se não tiver ninguém, volta pro login
+            }
 
-            return View(usuario); // Passa o objeto usuário inteiro para a tela
+            // Envia os dados verdadeiros do banco para a tela do celular
+            ViewBag.Nome = usuario.Nome;
+            ViewBag.Cargo = usuario.Cargo ?? "Membro";
+            ViewBag.Email = usuario.Email;
+            ViewBag.Telefone = usuario.Telefone ?? "Não informado";
+            ViewBag.Status = usuario.Status ?? "Pendente";
+
+            return View(usuario);
         }
 
-        // SALVAR A EDIÇÃO COM FOTO
+        // ==========================================
+        // 2. TELA DO ADMINISTRADOR (PASTOR)
+        // ==========================================
+        public IActionResult Administrador()
+        {
+            ViewBag.Nome = "Pr. João Marcos";
+            ViewBag.Cargo = "Pastor Presidente";
+
+            // Conta automaticamente quantos membros existem no banco de dados
+            ViewBag.MembrosAtivos = _banco.Usuarios.Count();
+            ViewBag.ValidacoesPendentes = 12;
+
+            return View();
+        }
+
+        // ==========================================
+        // 3. TELA DE EDIÇÃO DE PERFIL
+        // ==========================================
+        public IActionResult Editar()
+        {
+            // Pega o mesmo último usuário para editar
+            var usuario = _banco.Usuarios.OrderByDescending(u => u.Id).FirstOrDefault();
+            if (usuario == null) return NotFound();
+
+            return View(usuario);
+        }
+
+        // ==========================================
+        // 4. SALVAR A EDIÇÃO COM FOTO
+        // ==========================================
         [HttpPost]
-        public async Task<IActionResult> SalvarEdicao(int Id, string Nome, string Telefone, IFormFile? novaFoto)
+        public async Task<IActionResult> SalvarEdicao(int Id, string Nome, string Telefone, string RG, string CPF, string EstadoCivil, string Conjuge, IFormFile? novaFoto)
         {
             var usuario = _banco.Usuarios.Find(Id);
             if (usuario == null) return NotFound();
 
-            // Atualiza os dados de texto
+            // Salva os dados de texto
             usuario.Nome = Nome;
             usuario.Telefone = Telefone;
+            usuario.RG = RG;
+            usuario.CPF = CPF;
+            usuario.EstadoCivil = EstadoCivil;
+            usuario.Conjuge = Conjuge;
 
-            // Se o membro enviou uma foto nova...
+            // Salva a foto (se o membro enviou uma nova)
             if (novaFoto != null && novaFoto.Length > 0)
             {
-                // 1. Define onde salvar (wwwroot/uploads)
                 var pastaUploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+                if (!Directory.Exists(pastaUploads)) Directory.CreateDirectory(pastaUploads);
 
-                // 2. Cria um nome único e aleatório para a foto (ex: 5f4d8...jpg)
                 var nomeUnico = Guid.NewGuid().ToString() + Path.GetExtension(novaFoto.FileName);
                 var caminhoCompleto = Path.Combine(pastaUploads, nomeUnico);
 
-                // 3. Copia a foto do celular/PC para a pasta uploads
                 using (var stream = new FileStream(caminhoCompleto, FileMode.Create))
                 {
                     await novaFoto.CopyToAsync(stream);
                 }
 
-                // 4. Salva o caminho da foto no Banco de Dados
                 usuario.FotoPerfil = "/uploads/" + nomeUnico;
             }
 
             _banco.SaveChanges();
 
-            // Redireciona de volta para o perfil
             return RedirectToAction("Membro");
         }
     }

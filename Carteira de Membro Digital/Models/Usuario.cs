@@ -19,7 +19,7 @@ namespace CarteiraDeMembroDigital.Models
         public string Senha { get; set; }
 
         [Required]
-        public string Perfil { get; set; } // "Membro" ou "Admin"
+        public string Perfil { get; set; } = "Membro"; // Valores padrão: "Membro" ou "Pastor Presidente"
 
         public string? Status { get; set; } = "Pendente";
 
@@ -44,5 +44,10 @@ namespace CarteiraDeMembroDigital.Models
 
         [DataType(DataType.Date)]
         public DateTime? DataBatismo { get; set; }
+
+        public DateTime DataEmissao { get; set; } = DateTime.Now;
+        public DateTime DataValidade { get; set; } = DateTime.Now.AddMonths(12); // Já calcula +12 meses no cadastro
+
+        // Adicione esta propriedade no fim do seu modelo de Usuário
     }
 }

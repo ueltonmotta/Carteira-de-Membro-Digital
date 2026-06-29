@@ -1,25 +1,93 @@
-using Carteira_de_Membro_Digital.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
+using CarteiraDeMembroDigital.Models;
+using System.Linq;
+using System;
 
-namespace Carteira_de_Membro_Digital.Controllers
+namespace CarteiraDeMembroDigital.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly ApplicationDbContext _banco;
+
+        public HomeController(ApplicationDbContext banco)
+        {
+            _banco = banco;
+        }
+
+        public IActionResult Anuncios()
+        {
+            // Busca todos os anúncios, trazendo os mais recentes primeiro
+            var anuncios = _banco.Anuncios.OrderByDescending(a => a.DataPublicacao).ToList();
+            return View(anuncios);
+        }
+
+        public IActionResult Calendario()
+        {
+            // Puxa os eventos futuros agendados da igreja
+            var eventos = _banco.Eventos.Where(e => e.DataHora >= DateTime.Today).OrderBy(e => e.DataHora).ToList();
+            return View(eventos);
+        }
+
         public IActionResult Index()
+
+
+        {
+            // Vai buscar o membro à base de dados
+            var usuario = _banco.Usuarios.OrderByDescending(u => u.Id).FirstOrDefault();
+
+            if (usuario == null)
+            {
+                return RedirectToAction("Login", "Conta");
+            }
+
+            // =========================================================
+            // AUTO-CURA: Se a data for nula ou for o "Ano 0001" (bugada)
+            // =========================================================
+            // =========================================================
+            // AUTO-CURA: Conserta o erro do "Ano 0001"
+            // =========================================================
+            if (usuario.DataValidade.Year < 2000)
+            {
+                usuario.DataValidade = DateTime.Now.AddMonths(12);
+                _banco.SaveChanges();
+            }
+
+            // LÓGICA DE EXPIRAÇÃO AUTOMÁTICA
+            if (DateTime.Now > usuario.DataValidade)
+            {
+                ViewBag.CartaoExpirado = true;
+                ViewBag.StatusExibicao = "EXPIRADO";
+            }
+            else
+            {
+                ViewBag.CartaoExpirado = false;
+                ViewBag.StatusExibicao = usuario.Status ?? "ATIVO";
+            }
+
+            // Envia os dados do membro para a tela do Cartão!
+            return View(usuario);
+        }
+        // ==========================================
+        // PÁGINAS DO MENU LATERAL
+        // ==========================================
+        public IActionResult Configuracoes()
         {
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult Sobre()
         {
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        public IActionResult Suporte()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View();
+        }
+
+        public IActionResult Termos()
+        {
+            return View();
         }
     }
 }

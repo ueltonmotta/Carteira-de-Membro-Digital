@@ -1,0 +1,50 @@
+﻿@{
+    ViewData["Title"] = "Termos de Uso";
+    Layout = null; 
+}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>@ViewData["Title"]</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        html { background-color: #e2e8f0; }
+        body { width: 100%; max-width: 414px; margin: 0 auto; background-color: #f8fafc; min-height: 100vh; position: relative; box-shadow: 0 0 30px rgba(0,0,0,0.2); font-family: 'Montserrat', sans-serif; overflow-x: hidden; }
+        .top-bar { position: sticky; top: 0; left: 0; width: 100%; background-color: #0d1326; display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; box-sizing: border-box; border-bottom: 2px solid #bba371; z-index: 100; }
+        .back-btn { color: #bba371; font-size: 20px; text-decoration: none; }
+        .page-title { color: #fff; font-weight: bold; font-size: 16px; letter-spacing: 1px; text-transform: uppercase; }
+        .spacer { width: 20px; }
+        .content-area { padding: 30px 20px; color: #2d3748; line-height: 1.6; font-size: 13px; }
+        .content-area h2 { color: #0d1326; margin-top: 0; font-size: 18px; }
+        .content-area h3 { color: #2c5282; font-size: 14px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <a href="@Url.Action("Index", "Home")" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
+        <div class="page-title">Termos</div>
+        <div class="spacer"></div>
+    </div>
+
+    <div class="content-area">
+        <h2>Termos de Uso e Privacidade</h2>
+        <p>Ao utilizar o aplicativo da Credencial Digital ADHEL, o membro concorda com as diretrizes e regras estabelecidas pela instituição.</p>
+        
+        <h3>1. Utilização da Credencial</h3>
+        <p>A carteira digital de membro é de uso estritamente pessoal e intransmissível. O uso indevido, empréstimo de conta ou falsificação de dados resultará no bloqueio imediato do acesso por parte da administração.</p>
+
+        <h3>2. Privacidade e Proteção de Dados</h3>
+        <p>Os seus dados pessoais (Nome, RG, CPF, Telefone e Fotografia) são armazenados de forma segura na nossa base de dados interna e serão utilizados exclusivamente para fins de identificação e gestão eclesiástica da Assembleia de Deus em Helianópolis, em conformidade com a LGPD.</p>
+
+        <h3>3. Expiração e Renovação</h3>
+        <p>Conforme as regras de segurança estabelecidas, a credencial expira de forma automática a cada 12 meses. A renovação deve ser solicitada à Secretaria da Igreja mediante a atualização dos dados cadastrais.</p>
+    </div>
+
+</body>
+</html>

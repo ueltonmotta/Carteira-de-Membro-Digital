@@ -1,6 +1,8 @@
-﻿@{
+﻿@model CarteiraDeMembroDigital.Models.Usuario
+
+@{
     ViewData["Title"] = "Carteira de Membro Digital";
-    Layout = null; /* Remove o layout padrão para focar na tela do celular */
+    Layout = null; 
 }
 
 <!DOCTYPE html>
@@ -12,36 +14,194 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="~/css/site.css" />
+    
+    <style>
+        /* ========================================== */
+        /* LAYOUT FLUIDO E RESPONSIVO                 */
+        /* ========================================== */
+        html { 
+            background-color: #2d3748; /* Fundo escuro e neutro para o PC */
+        }
+        
+        body {
+            width: 100%;
+            max-width: 414px; /* Limita a largura para parecer celular no PC */
+            min-height: 100vh; /* Ocupa a tela toda naturalmente */
+            background-color: #1a202c; 
+            margin: 0 auto; /* Centraliza no PC */
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5); 
+            overflow-x: hidden;
+            font-family: 'Montserrat', sans-serif;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ========================================== */
+        /* TOP BAR E BOTÃO HAMBURGER FIXO À DIREITA   */
+        /* ========================================== */
+        .top-bar {
+            position: absolute; /* Fixa a barra no topo absoluto do ecrã mobile */
+            top: 0; 
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between; /* Garante o Logo à esquerda e Menu à direita */
+            align-items: center;
+            padding: 20px 25px; /* Mais espaço nas laterais */
+            box-sizing: border-box;
+            z-index: 1000;
+            background-color: transparent; /* Deixei transparente para um visual mais limpo, mas pode voltar ao #0d1326 se preferir */
+        }
+
+        .logo-text { 
+            color: #bba371; /* Alterei para dourado para destacar no fundo escuro */
+            font-weight: bold; 
+            font-size: 18px; 
+            letter-spacing: 1px; 
+        }
+
+        .hamburger-btn { 
+            color: #bba371; 
+            font-size: 28px; /* Aumentei o ícone ligeiramente para facilitar o clique */
+            cursor: pointer; 
+            margin-left: auto; /* Empurra o botão com força total para a direita */
+            padding: 5px;
+        }
+
+        .logo-text { color: #fff; font-weight: bold; font-size: 18px; letter-spacing: 1px; }
+        .hamburger-btn { color: #bba371; font-size: 26px; cursor: pointer; }
+
+        /* ========================================== */
+        /* SIDEBAR (MENU UNIFICADO FIXO NA TELA)      */
+        /* ========================================== */
+        .sidebar-menu {
+            position: fixed; /* Fixado em relação à tela do navegador */
+            top: 0; right: -300px;
+            width: 280px;
+            height: 100vh;
+            background-color: #ffffff;
+            box-shadow: -5px 0 20px rgba(0,0,0,0.5);
+            transition: right 0.3s ease;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar-menu.open { right: 0; }
+        
+        .sidebar-header {
+            background-color: #0d1326;
+            color: #fff;
+            padding: 25px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid #bba371;
+        }
+        .sidebar-header h3 { margin: 0; font-size: 16px; text-transform: uppercase; }
+        .close-btn { font-size: 24px; cursor: pointer; color: #e53e3e; }
+
+        .sidebar-links { padding: 10px 0; overflow-y: auto; }
+        .sidebar-links a {
+            display: block;
+            padding: 16px 20px;
+            color: #2d3748;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+        }
+        .sidebar-links a:active { background-color: #f7fafc; }
+        .sidebar-links a i { width: 30px; color: #2c5282; font-size: 18px; text-align: center; margin-right: 5px; }
+        .sidebar-links a.active { color: #2c5282; background-color: #ebf8ff; border-left: 4px solid #2c5282; padding-left: 16px; }
+        
+        .menu-divider { border: 0; border-top: 1px solid #edf2f7; margin: 5px 20px; }
+
+        .menu-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100vh;
+            background: rgba(0,0,0,0.7);
+            z-index: 1999;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .menu-overlay.open { display: block; opacity: 1; }
+
+        /* ========================================== */
+        /* CONTEÚDO DO CARTÃO                         */
+        /* ========================================== */
+        .mobile-wrapper {
+            flex: 1; /* Ocupa o restante da tela automaticamente */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .instruction-text { color: #a0aec0; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; }
+    </style>
 </head>
 <body>
+
+    <div class="top-bar">
+        <div class="logo-text">ADHEL</div>
+        <i class="fa-solid fa-bars hamburger-btn" onclick="toggleMenu()"></i>
+    </div>
+
+    <div class="sidebar-menu" id="sidebarMenu">
+        <div class="sidebar-header">
+            <h3>Menu</h3>
+            <i class="fa-solid fa-xmark close-btn" onclick="toggleMenu()"></i>
+        </div>
+        <div class="sidebar-links">
+            <a href="@Url.Action("Index", "Home")"><i class="fa-solid fa-id-card"></i> Cartão Digital</a>
+            <a href="@Url.Action("Anuncios", "Home")"><i class="fa-solid fa-bullhorn"></i> Anúncios e Avisos</a>
+            <a href="@Url.Action("Calendario", "Home")"><i class="fa-solid fa-calendar-days"></i> Agenda da Igreja</a>
+            
+            <hr class="menu-divider">
+
+            <a href="@Url.Action("Membro", "Perfil")"><i class="fa-solid fa-user"></i> Meu Perfil</a>
+            <a href="@Url.Action("Editar", "Perfil")"><i class="fa-solid fa-pen-to-square"></i> Editar Dados</a>
+            
+            <hr class="menu-divider">
+            
+            <a href="@Url.Action("Configuracoes", "Home")"><i class="fa-solid fa-gear"></i> Configurações</a>
+            <a href="@Url.Action("Sobre", "Home")"><i class="fa-solid fa-circle-info"></i> Sobre a Igreja</a>
+            <a href="@Url.Action("Suporte", "Home")"><i class="fa-solid fa-headset"></i> Ajuda e Suporte</a>
+            <a href="@Url.Action("Termos", "Home")"><i class="fa-solid fa-file-contract"></i> Termos de Uso</a>
+            
+            <hr class="menu-divider">
+            
+            <a href="@Url.Action("Login", "Conta")" style="color: #e53e3e;"><i class="fa-solid fa-right-from-bracket" style="color: #e53e3e;"></i> Sair da Conta</a>
+        </div>
+    </div>
+    
+    <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
+
     <div class="mobile-wrapper">
         <p class="instruction-text">Toque no cartão para virar</p>
 
         <div class="card-container" onclick="flipCard()">
-
             <div class="card-inner" id="memberCard">
-
+                
                 <div class="card-face card-front">
                     <div class="header">
                         <h2>ADHEL<br><span>Assembleia de Deus em Helianópolis</span></h2>
                         <p>CARTEIRA DE MEMBRO</p>
                     </div>
-
                     <div class="photo-section">
-                        <img src="@(string.IsNullOrEmpty(Model.FotoPerfil) ? "/images/foto-membro.jpg" : Model.FotoPerfil)" alt="Foto do Membro" class="member-photo" />
+                        <img src="@(string.IsNullOrEmpty(Model.FotoPerfil) ? "/images/foto-membro.jpg" : Model.FotoPerfil)" alt="Foto" class="member-photo" />
                     </div>
-
                     <div class="main-info">
-                        <h3>ANA SILVA</h3>
-                        <p class="role">MEMBRO ATIVO</p>
+                        <h3 style="text-transform: uppercase;">@Model.Nome</h3>
+                        <p class="role" style="text-transform: uppercase;">@(Model.Cargo ?? "Membro")</p>
                     </div>
-
                     <div class="footer-front">
                         <div class="ids">
-                            <p><strong>ID:</strong> GC-345.678.910</p>
-                            <p><strong>VAL:</strong> 12/2026</p>
+                            <p><strong>ID:</strong> ADHEL-@Model.Id.ToString("D4")</p>
+                            <p><strong>VAL:</strong> @(Model.DataValidade.ToString("MM/yyyy"))</p>
                         </div>
-                        <img src="~/images/qr-code.png" alt="QR Code" class="qr-small" />
+                        <div id="qrcode-container" style="background: white; padding: 3px; border-radius: 4px; min-width: 60px; min-height: 60px;"></div>
                     </div>
                 </div>
 
@@ -49,39 +209,13 @@
                     <div class="back-header">
                         <h3>DADOS DO MEMBRO</h3>
                     </div>
-
                     <div class="back-details">
-                        <div class="detail-row">
-                            <span class="label">Nome Completo:</span>
-                            <span class="value">Ana Carolina da Silva</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="label">Cargo:</span>
-                            <span class="value">Membro Ativo</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="label">Estado Civil:</span>
-                            <span class="value">Solteira</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="label">RG:</span>
-                            <span class="value">12.345.678-9</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="label">CPF:</span>
-                            <span class="value">123.456.789-00</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="label">Data de Batismo:</span>
-                            <span class="value">15/04/2018</span>
-                        </div>
-                    </div>
-
-                    <div class="signature-section">
-                        <img src="~/images/assinatura-pastor.png" alt="Assinatura do Pastor" class="signature-img" />
-                        <div class="signature-line"></div>
-                        <p class="signature-name">Pr. João Marcos</p>
-                        <p class="signature-title">Pastor Presidente</p>
+                        <div class="detail-row"><span class="label">Nome:</span><span class="value">@Model.Nome</span></div>
+                        <div class="detail-row"><span class="label">Cargo:</span><span class="value">@(Model.Cargo ?? "Membro")</span></div>
+                        <div class="detail-row"><span class="label">Estado Civil:</span><span class="value">@(Model.EstadoCivil ?? "Não informado")</span></div>
+                        <div class="detail-row"><span class="label">RG:</span><span class="value">@(Model.RG ?? "Não informado")</span></div>
+                        <div class="detail-row"><span class="label">CPF:</span><span class="value">@(Model.CPF ?? "Não informado")</span></div>
+                        <div class="detail-row"><span class="label">Membro desde:</span><span class="value">@(Model.DataEmissao.ToString("yyyy") ?? "2024")</span></div>
                     </div>
                 </div>
 
@@ -89,88 +223,41 @@
         </div>
     </div>
 
-    <div class="mobile-nav">
-        <a href="@Url.Action("Index", "Home")" class="nav-item active">
-            <i class="fa-solid fa-id-card"></i>
-            <span>Cartão</span>
-        </a>
-
-        <a href="@Url.Action("Membro", "Perfil")" class="nav-item">
-            <i class="fa-solid fa-user"></i>
-            <span>Perfil</span>
-        </a>
-
-        <a href="@Url.Action("Editar", "Perfil")" class="nav-item">
-            <i class="fa-solid fa-pen-to-square"></i>
-            <span>Editar</span>
-        </a>
-
-        <a href="@Url.Action("Login", "Conta")" class="nav-item text-danger">
-            <i class="fa-solid fa-right-from-bracket"></i>
-            <span>Sair</span>
-        </a>
-    </div>
-
-    <style>
-            /* Adiciona um espaço extra no fim da página para o menu não tampar o conteúdo */
-            body {
-                padding-bottom: 80px !important;
-            }
-
-            .mobile-nav {
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                width: 100%;
-                background-color: #ffffff;
-                display: flex;
-                justify-content: space-around;
-                align-items: center;
-                padding: 12px 0 15px 0;
-                box-shadow: 0 -5px 20px rgba(0,0,0,0.15);
-                z-index: 1000;
-                border-top-left-radius: 25px;
-                border-top-right-radius: 25px;
-            }
-
-            .nav-item {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                text-decoration: none;
-                color: #718096; /* Cinza padrão */
-                font-size: 11px;
-                font-weight: 700;
-                transition: all 0.3s ease;
-            }
-
-                .nav-item i {
-                    font-size: 22px;
-                    margin-bottom: 4px;
-                }
-
-                /* Cor de quando o menu está selecionado (Dourado ADHEL) */
-                .nav-item.active {
-                    color: #bba371;
-                    transform: translateY(-3px); /* Dá um leve saltinho para cima */
-                }
-
-                /* Cor do botão de sair (Vermelho) */
-                .nav-item.text-danger {
-                    color: #e53e3e;
-                }
-
-                /* Efeito de clique */
-                .nav-item:active {
-                    transform: scale(0.9);
-                }
-    </style>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
-            function flipCard() {
-                const card = document.getElementById('memberCard');
-                card.classList.toggle('is-flipped');
+        function toggleMenu() {
+            document.getElementById("sidebarMenu").classList.toggle("open");
+            document.getElementById("menuOverlay").classList.toggle("open");
+        }
+
+        function flipCard() {
+            document.getElementById('memberCard').classList.toggle('is-flipped');
+        }
+
+        window.onload = function () {
+            var estaExpirado = "@(ViewBag.CartaoExpirado == true ? "true" : "false")" === "true";
+            var statusAtual = "@(ViewBag.StatusExibicao ?? "ATIVO")";
+            var dataValidadeStr = "@Model.DataValidade.ToString("dd/MM/yyyy")";
+            var nomeMembro = "@(Model.Nome ?? "Membro")";
+            var idMembro = "ADHEL-@Model.Id.ToString("D4")";
+
+            var dadosValidacao = estaExpirado 
+                ? "[ALERTA: CARTAO EXPIRADO]\nNome: " + nomeMembro + "\nID: " + idMembro + "\nValidade: " + dataValidadeStr
+                : "[MEMBRO VALIDADO]\nNome: " + nomeMembro + "\nID: " + idMembro + "\nStatus: " + statusAtual + "\nValidade: " + dataValidadeStr;
+
+            var qrContainer = document.getElementById("qrcode-container");
+            if (qrContainer) {
+                qrContainer.innerHTML = ""; 
+                new QRCode(qrContainer, {
+                    text: dadosValidacao,
+                    width: 70, 
+                    height: 70,         
+                    colorDark: estaExpirado ? "#e53e3e" : "#0d1326", 
+                    colorLight: "#ffffff", 
+                    correctLevel: QRCode.CorrectLevel.L
+                });
             }
+        };
     </script>
 </body>
 </html>

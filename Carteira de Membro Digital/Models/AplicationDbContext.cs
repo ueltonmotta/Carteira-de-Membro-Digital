@@ -11,5 +11,8 @@ namespace CarteiraDeMembroDigital.Models
 
         // Esta propriedade diz que queremos uma tabela chamada "Usuarios" baseada no modelo acima
         public DbSet<Usuario> Usuarios { get; set; }
+
+        public DbSet<Anuncio> Anuncios { get; set; }
+        public DbSet<Evento> Eventos { get; set; }
     }
 }

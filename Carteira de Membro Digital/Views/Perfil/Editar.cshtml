@@ -1,45 +1,158 @@
-﻿@{
-    ViewData["Title"] = "Editar Perfil";
-    Layout = null;
-}
+﻿@model CarteiraDeMembroDigital.Models.Usuario
+@{ Layout = null; }
 
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>@ViewData["Title"]</title>
+    <title>ADHEL - Editar Perfil</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* ========================================== */
+        /* PADRÃO UNIFICADO (Mobile + Hamburger)      */
+        /* ========================================== */
+        html { background-color: #2d3748; }
+        body { width: 100%; max-width: 414px; min-height: 100vh; background-color: #1a202c; margin: 0 auto; position: relative; font-family: 'Montserrat', sans-serif; overflow-x: hidden; display: flex; flex-direction: column; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+        
+        .top-bar { position: absolute; top: 0; left: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 20px 25px; box-sizing: border-box; z-index: 1000; }
+        .logo-text { color: #bba371; font-weight: bold; font-size: 18px; letter-spacing: 1px; }
+        .hamburger-btn { color: #bba371; font-size: 28px; cursor: pointer; margin-left: auto; }
+
+        .sidebar-menu { position: fixed; top: 0; right: -300px; width: 280px; height: 100vh; background-color: #ffffff; box-shadow: -5px 0 20px rgba(0,0,0,0.5); transition: right 0.3s ease; z-index: 2000; display: flex; flex-direction: column; }
+        .sidebar-menu.open { right: 0; }
+        .sidebar-header { background-color: #0d1326; color: #fff; padding: 25px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #bba371; }
+        .close-btn { font-size: 24px; cursor: pointer; color: #e53e3e; }
+        
+        .sidebar-links { padding: 10px 0; overflow-y: auto; }
+        .sidebar-links a { display: block; padding: 16px 20px; color: #2d3748; text-decoration: none; font-weight: 600; font-size: 15px; }
+        .sidebar-links a i { width: 30px; color: #2c5282; font-size: 18px; text-align: center; margin-right: 5px; }
+        .sidebar-links a.active { color: #2c5282; background-color: #ebf8ff; border-left: 4px solid #2c5282; }
+        .menu-divider { border: 0; border-top: 1px solid #edf2f7; margin: 5px 20px; }
+        
+        .menu-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: rgba(0,0,0,0.7); z-index: 1999; display: none; opacity: 0; transition: opacity 0.3s ease; }
+        .menu-overlay.open { display: block; opacity: 1; }
+
+        .content-wrapper { flex: 1; padding: 80px 20px 40px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; box-sizing: border-box; }
+
+        /* ========================================== */
+        /* ESTILOS ESPECÍFICOS DA EDIÇÃO              */
+        /* ========================================== */
+        .card { background: #fff; border-radius: 20px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); width: 100%; max-width: 320px; box-sizing: border-box; }
+        h2 { color: #0d1326; text-align: center; margin-top: 0; margin-bottom: 20px; font-size: 20px; font-weight: 700; }
+        
+        label { display: block; color: #bba371; font-size: 11px; font-weight: bold; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
+        input, select { width: 100%; padding: 12px; border: 1px solid #cbd5e0; border-radius: 10px; font-size: 14px; box-sizing: border-box; outline: none; margin-bottom: 15px; background: #f7fafc; font-family: 'Montserrat', sans-serif; color: #2d3748; }
+        input:focus, select:focus { border-color: #0d1326; background: #fff; }
+        
+        .section-title { color: #0d1326; font-size: 13px; font-weight: 700; margin: 15px 0 15px; border-bottom: 2px solid #f0f4f8; padding-bottom: 5px; text-transform: uppercase; }
+        .row { display: flex; gap: 10px; }
+        .col { flex: 1; }
+        .btn-save { width: 100%; background: #0d1326; color: white; border: none; padding: 15px; border-radius: 10px; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 12px rgba(13, 19, 38, 0.3); }
+        
+        .photo-upload-container { text-align: center; margin-bottom: 20px; }
+        .photo-preview { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid #bba371; margin-bottom: 10px; background-color: #f7fafc; }
+        input[type="file"] { padding: 8px; font-size: 11px; background: #fff; cursor: pointer; border: 1px dashed #cbd5e0; }
+    </style>
 </head>
-<body style="background-color: #1a202c; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; font-family: 'Montserrat', sans-serif;">
+<body>
 
-    <div style="width: 100%; max-width: 400px; padding: 20px;">
-        <div style="background: #fff; border-radius: 20px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+    <div class="top-bar">
+        <div class="logo-text">ADHEL</div>
+        <i class="fa-solid fa-bars hamburger-btn" onclick="toggleMenu()"></i>
+    </div>
 
-            <h2 style="color: #2c5282; text-align: center; margin-top: 0; margin-bottom: 25px;">Atualizar Dados</h2>
+    <div class="sidebar-menu" id="sidebarMenu">
+        <div class="sidebar-header">
+            <h3>Menu</h3>
+            <i class="fa-solid fa-xmark close-btn" onclick="toggleMenu()"></i>
+        </div>
+        <div class="sidebar-links">
+            <a href="@Url.Action("Index", "Home")"><i class="fa-solid fa-id-card"></i> Cartão Digital</a>
+            <a href="@Url.Action("Anuncios", "Home")"><i class="fa-solid fa-bullhorn"></i> Anúncios e Avisos</a>
+            <a href="@Url.Action("Calendario", "Home")"><i class="fa-solid fa-calendar-days"></i> Agenda da Igreja</a>
+            
+            <hr class="menu-divider">
+
+            <a href="@Url.Action("Membro", "Perfil")"><i class="fa-solid fa-user"></i> Meu Perfil</a>
+            <a href="@Url.Action("Editar", "Perfil")"><i class="fa-solid fa-pen-to-square"></i> Editar Dados</a>
+            
+            <hr class="menu-divider">
+            
+            <a href="@Url.Action("Configuracoes", "Home")"><i class="fa-solid fa-gear"></i> Configurações</a>
+            <a href="@Url.Action("Sobre", "Home")"><i class="fa-solid fa-circle-info"></i> Sobre a Igreja</a>
+            <a href="@Url.Action("Suporte", "Home")"><i class="fa-solid fa-headset"></i> Ajuda e Suporte</a>
+            <a href="@Url.Action("Termos", "Home")"><i class="fa-solid fa-file-contract"></i> Termos de Uso</a>
+            
+            <hr class="menu-divider">
+            
+            <a href="@Url.Action("Login", "Conta")" style="color: #e53e3e;"><i class="fa-solid fa-right-from-bracket" style="color: #e53e3e;"></i> Sair da Conta</a>
+        </div>
+    </div>
+    <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
+
+    <div class="content-wrapper">
+        <div class="card">
+            <h2>Atualizar Perfil</h2>
 
             <form asp-controller="Perfil" asp-action="SalvarEdicao" method="post" enctype="multipart/form-data">
-
                 <input type="hidden" name="Id" value="@Model.Id" />
 
-                <div style="margin-bottom: 20px; text-align: center;">
-
-                    <img src="@(string.IsNullOrEmpty(Model.FotoPerfil) ? "/images/foto-membro.jpg" : Model.FotoPerfil)"
-                         style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid #bba371; margin-bottom: 10px;" />
-
-                    <label style="display: block; color: #4a5568; font-size: 13px; font-weight: bold; margin-bottom: 5px;">Alterar Foto de Perfil</label>
-
-                    <input type="file" name="novaFoto" accept="image/*" style="width: 100%; padding: 10px; font-size: 13px; background: #f8fafc; border: 1px solid #cbd5e0; border-radius: 8px;" />
+                <div class="photo-upload-container">
+                    <img src="@(string.IsNullOrEmpty(Model.FotoPerfil) ? "/images/foto-membro.jpg" : Model.FotoPerfil)" class="photo-preview" />
+                    <label style="color: #0d1326;">Escolher nova foto</label>
+                    <input type="file" name="novaFoto" accept="image/*" />
                 </div>
 
-                <div style="margin-bottom: 15px;">
-                    <label style="display: block; color: #4a5568; font-size: 13px; font-weight: bold; margin-bottom: 5px;">Nome Completo</label>
-                    <input type="text" name="Nome" value="@Model.Nome" style="width: 100%; padding: 12px; border: 1px solid #cbd5e0; border-radius: 10px;" required />
+                <div class="section-title">Dados Pessoais</div>
+                
+                <label>Nome Completo</label>
+                <input type="text" name="Nome" value="@Model.Nome" required />
+
+                <div class="row">
+                    <div class="col">
+                        <label>RG</label>
+                        <input type="text" name="RG" value="@Model.RG" />
+                    </div>
+                    <div class="col">
+                        <label>CPF</label>
+                        <input type="text" name="CPF" value="@Model.CPF" />
+                    </div>
                 </div>
+
+                <label>Telefone / WhatsApp</label>
+                <input type="tel" name="Telefone" value="@Model.Telefone" />
+
+                <label>Estado Civil</label>
+                <select name="EstadoCivil" id="estadoCivilSelect" onchange="verificarEstadoCivil()">
+                    <option value="Solteiro(a)" selected="@(Model.EstadoCivil == "Solteiro(a)")">Solteiro(a)</option>
+                    <option value="Casado(a)" selected="@(Model.EstadoCivil == "Casado(a)")">Casado(a)</option>
+                    <option value="Divorciado(a)" selected="@(Model.EstadoCivil == "Divorciado(a)")">Divorciado(a)</option>
+                    <option value="Viúvo(a)" selected="@(Model.EstadoCivil == "Viúvo(a)")">Viúvo(a)</option>
+                </select>
+
+                <div id="divConjuge" style="display: @(Model.EstadoCivil == "Casado(a)" ? "block" : "none");">
+                    <label>Nome do Cônjuge</label>
+                    <input type="text" name="Conjuge" id="inputConjuge" value="@Model.Conjuge" />
+                </div>
+
+                <button type="submit" class="btn-save">Salvar Alterações</button>
             </form>
-
         </div>
     </div>
 
+    <script>
+        function toggleMenu() { 
+            document.getElementById("sidebarMenu").classList.toggle("open"); 
+            document.getElementById("menuOverlay").classList.toggle("open"); 
+        }
+
+        function verificarEstadoCivil() {
+            var select = document.getElementById("estadoCivilSelect");
+            var divConjuge = document.getElementById("divConjuge");
+            divConjuge.style.display = select.value === "Casado(a)" ? "block" : "none";
+        }
+    </script>
 </body>
 </html>

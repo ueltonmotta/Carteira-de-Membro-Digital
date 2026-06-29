@@ -1,0 +1,62 @@
+﻿@model List<CarteiraDeMembroDigital.Models.Anuncio>
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ADHEL - Anúncios</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+            html { background-color: #2d3748; }
+            body { width: 100%; max-width: 414px; min-height: 100vh; background-color: #1a202c; margin: 0 auto; position: relative; font-family: 'Montserrat', sans-serif; color: #fff; display: flex; flex-direction: column; }
+            .top-bar { display: flex; justify-content: space-between; align-items: center; padding: 20px 25px; background: #0d1326; border-bottom: 2px solid #bba371; }
+            .back-btn { color: #bba371; font-size: 22px; text-decoration: none; }
+            .content { padding: 20px; flex: 1; }
+        
+            /* Cartão de Anúncio */
+            .anuncio-card { background: #fff; color: #2d3748; border-radius: 15px; padding: 18px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); border-left: 5px solid #2c5282; }
+            .anuncio-card.importante { border-left-color: #e53e3e; background: #fffaf0; }
+            .anuncio-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+            .anuncio-title { font-weight: 700; font-size: 15px; color: #0d1326; }
+            .badge-importante { background: #e53e3e; color: #fff; font-size: 10px; padding: 3px 8px; border-radius: 10px; font-weight: bold; }
+            .anuncio-data { font-size: 11px; color: #718096; }
+            .anuncio-corpo { font-size: 13px; line-height: 1.5; margin: 0; }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <a href="@Url.Action("Index", "Home")" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
+        <div style="color: #bba371; font-weight: bold;">ANÚNCIOS</div>
+        <div style="width: 22px;"></div>
+    </div>
+
+    <div class="content">
+        @if (!Model.Any())
+        {
+            <p style="text-align: center; color: #a0aec0; margin-top: 40px;">Nenhum anúncio para esta semana.</p>
+        }
+        
+        @foreach (var anuncio in Model)
+        {
+            <div class="anuncio-card @(anuncio.EhImportante ? "importante" : "")">
+                <div class="anuncio-header">
+                    <span class="anuncio-title">@anuncio.Titulo</span>
+                    @if (anuncio.EhImportante)
+                    {
+                        <span class="badge-importante">IMPORTANTE</span>
+                    }
+                </div>
+                <p class="anuncio-corpo">@anuncio.Conteudo</p>
+                <div style="text-align: right; margin-top: 10px;">
+                    <span class="anuncio-data"><i class="fa-regular fa-clock"></i> @anuncio.DataPublicacao.ToString("dd/MM/yyyy")</span>
+                </div>
+            </div>
+        }
+    </div>
+</body>
+</html>

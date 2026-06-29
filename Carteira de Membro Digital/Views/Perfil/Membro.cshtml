@@ -1,121 +1,125 @@
-﻿@{
-    ViewData["Title"] = "Meu Perfil";
-    Layout = null; /* Esta linha remove a barra branca chata! */
-}
+﻿@model CarteiraDeMembroDigital.Models.Usuario
+@{ Layout = null; }
 
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>@ViewData["Title"]</title>
+    <title>ADHEL - Meu Perfil</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* ========================================== */
+        /* PADRÃO UNIFICADO (Mobile + Hamburger)      */
+        /* ========================================== */
+        html { background-color: #2d3748; }
+        body { width: 100%; max-width: 414px; min-height: 100vh; background-color: #1a202c; margin: 0 auto; position: relative; font-family: 'Montserrat', sans-serif; overflow-x: hidden; display: flex; flex-direction: column; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+        
+        .top-bar { position: absolute; top: 0; left: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 20px 25px; box-sizing: border-box; z-index: 1000; }
+        .logo-text { color: #bba371; font-weight: bold; font-size: 18px; letter-spacing: 1px; }
+        .hamburger-btn { color: #bba371; font-size: 28px; cursor: pointer; margin-left: auto; }
+
+        .sidebar-menu { position: fixed; top: 0; right: -300px; width: 280px; height: 100vh; background-color: #ffffff; box-shadow: -5px 0 20px rgba(0,0,0,0.5); transition: right 0.3s ease; z-index: 2000; display: flex; flex-direction: column; }
+        .sidebar-menu.open { right: 0; }
+        .sidebar-header { background-color: #0d1326; color: #fff; padding: 25px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #bba371; }
+        .close-btn { font-size: 24px; cursor: pointer; color: #e53e3e; }
+        
+        .sidebar-links { padding: 10px 0; overflow-y: auto; }
+        .sidebar-links a { display: block; padding: 16px 20px; color: #2d3748; text-decoration: none; font-weight: 600; font-size: 15px; }
+        .sidebar-links a i { width: 30px; color: #2c5282; font-size: 18px; text-align: center; margin-right: 5px; }
+        .sidebar-links a.active { color: #2c5282; background-color: #ebf8ff; border-left: 4px solid #2c5282; }
+        .menu-divider { border: 0; border-top: 1px solid #edf2f7; margin: 5px 20px; }
+        
+        .menu-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: rgba(0,0,0,0.7); z-index: 1999; display: none; opacity: 0; transition: opacity 0.3s ease; }
+        .menu-overlay.open { display: block; opacity: 1; }
+
+        .content-wrapper { flex: 1; padding: 80px 20px 40px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-sizing: border-box; }
+
+        /* ========================================== */
+        /* ESTILOS ESPECÍFICOS DO PERFIL              */
+        /* ========================================== */
+        .profile-card { background: #fff; border-radius: 20px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); text-align: center; width: 100%; max-width: 320px; box-sizing: border-box; }
+        .profile-photo { width: 130px; height: 130px; border-radius: 50%; object-fit: cover; border: 4px solid #bba371; margin: 0 auto 15px auto; display: block; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .name { color: #2c5282; margin: 0; font-size: 22px; font-weight: 700; }
+        .role { color: #bba371; font-weight: bold; margin-top: 5px; font-size: 14px; text-transform: uppercase; }
+        .status-badge { display: inline-block; background-color: #c6f6d5; color: #22543d; padding: 6px 15px; border-radius: 20px; font-size: 12px; font-weight: bold; margin: 15px 0 20px 0; }
+        
+        .info-box { background: #f8fafc; border-radius: 12px; padding: 18px; text-align: left; margin-bottom: 20px; border: 1px solid #e2e8f0; }
+        .info-box p { margin: 0 0 12px 0; color: #4a5568; font-size: 13px; }
+        .info-box p:last-child { margin-bottom: 0; }
+        .info-box i { color: #2c5282; width: 20px; }
+        
+        .action-buttons { display: flex; gap: 10px; justify-content: center; }
+        .btn-primary { flex: 1; background: #2c5282; color: #fff; text-decoration: none; padding: 12px; border-radius: 10px; font-size: 14px; font-weight: bold; text-align: center; }
+        .btn-secondary { flex: 1; background: #edf2f7; color: #2d3748; text-decoration: none; padding: 12px; border-radius: 10px; font-size: 14px; font-weight: bold; border: 1px solid #cbd5e0; text-align: center; }
+    </style>
 </head>
-<body style="background-color: #1a202c; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; font-family: 'Montserrat', sans-serif;">
+<body>
+    
+    <div class="top-bar">
+        <div class="logo-text">ADHEL</div>
+        <i class="fa-solid fa-bars hamburger-btn" onclick="toggleMenu()"></i>
+    </div>
 
-    <div style="width: 100%; max-width: 400px; padding: 20px;">
-        <div style="background: #fff; border-radius: 20px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); text-align: center;">
+    <div class="sidebar-menu" id="sidebarMenu">
+        <div class="sidebar-header">
+            <h3>Menu</h3>
+            <i class="fa-solid fa-xmark close-btn" onclick="toggleMenu()"></i>
+        </div>
+        <div class="sidebar-links">
+            <a href="@Url.Action("Index", "Home")"><i class="fa-solid fa-id-card"></i> Cartão Digital</a>
+            <a href="@Url.Action("Anuncios", "Home")"><i class="fa-solid fa-bullhorn"></i> Anúncios e Avisos</a>
+            <a href="@Url.Action("Calendario", "Home")"><i class="fa-solid fa-calendar-days"></i> Agenda da Igreja</a>
+            
+            <hr class="menu-divider">
 
-            <img src="~/images/foto-membro.jpg" alt="Foto" style="width: 110px; height: 110px; border-radius: 50%; border: 4px solid #bba371; object-fit: cover; margin-bottom: 15px;" />
+            <a href="@Url.Action("Membro", "Perfil")"><i class="fa-solid fa-user"></i> Meu Perfil</a>
+            <a href="@Url.Action("Editar", "Perfil")"><i class="fa-solid fa-pen-to-square"></i> Editar Dados</a>
+            
+            <hr class="menu-divider">
+            
+            <a href="@Url.Action("Configuracoes", "Home")"><i class="fa-solid fa-gear"></i> Configurações</a>
+            <a href="@Url.Action("Sobre", "Home")"><i class="fa-solid fa-circle-info"></i> Sobre a Igreja</a>
+            <a href="@Url.Action("Suporte", "Home")"><i class="fa-solid fa-headset"></i> Ajuda e Suporte</a>
+            <a href="@Url.Action("Termos", "Home")"><i class="fa-solid fa-file-contract"></i> Termos de Uso</a>
+            
+            <hr class="menu-divider">
+            
+            <a href="@Url.Action("Login", "Conta")" style="color: #e53e3e;"><i class="fa-solid fa-right-from-bracket" style="color: #e53e3e;"></i> Sair da Conta</a>
+        </div>
+    </div>
+    <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
 
-            <h2 style="color: #2c5282; margin: 0; font-size: 22px;">@ViewBag.Nome</h2>
-            <p style="color: #bba371; font-weight: bold; margin-top: 5px; font-size: 14px;">@ViewBag.Cargo</p>
+    <div class="content-wrapper">
+        <div class="profile-card">
+            
+            <img src="@(string.IsNullOrEmpty(Model.FotoPerfil) ? "/images/foto-membro.jpg" : Model.FotoPerfil)" alt="Foto de Perfil" class="profile-photo" />
+            
+            <h2 class="name">@Model.Nome</h2>
+            <p class="role">@(Model.Cargo ?? "Membro")</p>
 
-            <span style="display: inline-block; background-color: #c6f6d5; color: #22543d; padding: 6px 15px; border-radius: 20px; font-size: 12px; font-weight: bold; margin-bottom: 25px;">
-                Status: @ViewBag.Status
+            <span class="status-badge">
+                Status: @(Model.Status ?? "Pendente")
             </span>
 
-            <div style="background: #f8fafc; border-radius: 12px; padding: 20px; text-align: left; margin-bottom: 25px; border: 1px solid #e2e8f0;">
-                <p style="margin-bottom: 12px; color: #4a5568; font-size: 14px;"><strong><i class="fa-solid fa-envelope" style="color: #2c5282;"></i> Email:</strong><br> @ViewBag.Email</p>
-                <p style="margin: 0; color: #4a5568; font-size: 14px;"><strong><i class="fa-solid fa-phone" style="color: #2c5282;"></i> Telefone:</strong><br> @ViewBag.Telefone</p>
+            <div class="info-box">
+                <p><strong><i class="fa-solid fa-envelope"></i> Email:</strong><br> @Model.Email</p>
+                <p><strong><i class="fa-solid fa-phone"></i> Telefone:</strong><br> @(Model.Telefone ?? "Não informado")</p>
             </div>
 
-            <div style="display: flex; gap: 10px; justify-content: center;">
-                <a href="@Url.Action("Index", "Home")" style="flex: 1; background: #2c5282; color: #fff; text-decoration: none; padding: 12px; border-radius: 10px; font-size: 14px; font-weight: bold;">
-                    Ver Cartão
-                </a>
-                <a href="@Url.Action("Editar", "Perfil")" style="flex: 1; background: #edf2f7; color: #2d3748; text-decoration: none; padding: 12px; border-radius: 10px; font-size: 14px; font-weight: bold; border: 1px solid #cbd5e0;">
-                    Editar Perfil
-                </a>
+            <div class="action-buttons">
+                <a href="@Url.Action("Index", "Home")" class="btn-primary">Ver Cartão</a>
+                <a href="@Url.Action("Editar", "Perfil")" class="btn-secondary">Editar Perfil</a>
             </div>
         </div>
     </div>
-    <div class="mobile-nav">
-        <a href="@Url.Action("Index", "Home")" class="nav-item">
-            <i class="fa-solid fa-id-card"></i>
-            <span>Cartão</span>
-        </a>
 
-        <a href="@Url.Action("Membro", "Perfil")" class="nav-item active">
-            <i class="fa-solid fa-user"></i>
-            <span>Perfil</span>
-        </a>
-
-        <a href="@Url.Action("Editar", "Perfil")" class="nav-item">
-            <i class="fa-solid fa-pen-to-square"></i>
-            <span>Editar</span>
-        </a>
-
-        <a href="@Url.Action("Login", "Conta")" class="nav-item text-danger">
-            <i class="fa-solid fa-right-from-bracket"></i>
-            <span>Sair</span>
-        </a>
-    </div>
-
-    <style>
-            /* Adiciona um espaço extra no fim da página para o menu não tampar o conteúdo */
-            body {
-                padding-bottom: 80px !important;
-            }
-
-            .mobile-nav {
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                width: 100%;
-                background-color: #ffffff;
-                display: flex;
-                justify-content: space-around;
-                align-items: center;
-                padding: 12px 0 15px 0; /* Espaçamento confortável para os dedos */
-                box-shadow: 0 -5px 20px rgba(0,0,0,0.15);
-                z-index: 1000;
-                border-top-left-radius: 25px; /* Bordas arredondadas no topo */
-                border-top-right-radius: 25px;
-            }
-
-            .nav-item {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                text-decoration: none;
-                color: #718096; /* Cinza padrão */
-                font-size: 11px;
-                font-weight: 700;
-                transition: all 0.3s ease;
-            }
-
-                .nav-item i {
-                    font-size: 22px;
-                    margin-bottom: 4px;
-                }
-
-                /* Cor de quando o menu está selecionado (Dourado ADHEL) */
-                .nav-item.active {
-                    color: #bba371;
-                    transform: translateY(-3px); /* Dá um leve saltinho para cima */
-                }
-
-                /* Cor do botão de sair (Vermelho) */
-                .nav-item.text-danger {
-                    color: #e53e3e;
-                }
-
-                /* Efeito de clique */
-                .nav-item:active {
-                    transform: scale(0.9);
-                }
-    </style>
+    <script>
+        function toggleMenu() { 
+            document.getElementById("sidebarMenu").classList.toggle("open"); 
+            document.getElementById("menuOverlay").classList.toggle("open"); 
+        }
+    </script>
 </body>
 </html>
