@@ -1,4 +1,4 @@
-# ADHEL Digital 🏛️
+# ADHEL Digital 
 
 > Sistema de Gestão de Membresia para Igrejas — Aplicação Web Mobile-First
 
@@ -8,7 +8,7 @@
 
 ---
 
-## 📋 Visão Geral
+## Visão Geral
 
 O **ADHEL Digital** é uma aplicação web focada em dispositivos móveis que digitaliza a gestão de membresia eclesiástica. O sistema substitui carteirinhas físicas por credenciais digitais com QR Code dinâmico, automatiza o check-in em cultos de Santa Ceia via geolocalização (GPS) e fornece um painel administrativo inteligente com alertas pastorais.
 
@@ -22,7 +22,7 @@ O **ADHEL Digital** é uma aplicação web focada em dispositivos móveis que di
 
 ---
 
-## 🚀 Funcionalidades Principais
+##  Funcionalidades Principais
 
 - **Credencial Digital com QR Code** — Geração dinâmica em JavaScript com validação visual (vermelho para expirado, preto para ativo)
 - **Check-in por Geolocalização** — Assinatura de lista via GPS diretamente no navegador
@@ -32,7 +32,7 @@ O **ADHEL Digital** é uma aplicação web focada em dispositivos móveis que di
 
 ---
 
-## 🛠️ Tecnologias Utilizadas
+##  Tecnologias Utilizadas
 
 | Camada | Tecnologia |
 |---|---|
@@ -44,7 +44,7 @@ O **ADHEL Digital** é uma aplicação web focada em dispositivos móveis que di
 
 ---
 
-## 🗂️ Estrutura do Projeto
+##  Estrutura do Projeto
 
 ```
 adhel-digital/
@@ -63,7 +63,7 @@ adhel-digital/
 
 ---
 
-## ⚙️ Como Executar
+##  Como Executar
 
 ```bash
 # 1. Clonar o repositório
@@ -86,7 +86,7 @@ dotnet run
 
 ---
 
-## 📐 Arquitetura
+##  Arquitetura
 
 O sistema segue o padrão **MVC** com comunicação HTTP entre cliente e servidor:
 
@@ -103,7 +103,7 @@ O sistema segue o padrão **MVC** com comunicação HTTP entre cliente e servido
 
 ---
 
-## 🗃️ Modelo de Dados
+##  Modelo de Dados
 
 | Entidade | Propriedades Principais |
 |---|---|
@@ -114,7 +114,7 @@ O sistema segue o padrão **MVC** com comunicação HTTP entre cliente e servido
 
 ---
 
-## 🤝 Contribuição
+##  Contribuição
 
 1. Faça um _fork_ do projeto
 2. Crie uma branch (`git checkout -b feature/minha-feature`)
@@ -124,10 +124,10 @@ O sistema segue o padrão **MVC** com comunicação HTTP entre cliente e servido
 
 ---
 
-## 📄 Licença
+##  Licença
 
 Este projeto foi desenvolvido para fins acadêmicos e institucionais. Consulte a equipe ADHEL para informações sobre uso e distribuição.
 
 ---
 
-*Desenvolvido com ❤️ para a gestão pastoral moderna.*
+
