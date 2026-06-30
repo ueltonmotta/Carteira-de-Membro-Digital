@@ -2,7 +2,7 @@
 
 ## Módulos do Sistema
 
-### 🔐 Autenticação — Cadastro com Termos
+###  Autenticação — Cadastro com Termos
 
 **Fluxo:**
 1. Utilizador preenche o formulário de cadastro com seus dados pessoais
@@ -16,7 +16,7 @@
 
 ---
 
-### 🪪 Carteirinha — QR Code Dinâmico
+###  Carteirinha — QR Code Dinâmico
 
 **Geração:**
 - QR Code gerado em JavaScript via canvas (`100px`)
@@ -32,7 +32,7 @@
 
 ---
 
-### 📍 Check-in — Assinatura via GPS
+###  Check-in — Assinatura via GPS
 
 **Fluxo Técnico:**
 1. Membro clica em "Assinar Lista" no culto ativo
@@ -48,7 +48,7 @@
 
 ---
 
-### 🚨 Alerta Pastoral — Detecção de Ausências
+###  Alerta Pastoral — Detecção de Ausências
 
 **Lógica:**
 - Consulta LINQ cruza as últimas **3 Santas Ceias** com a tabela `Presenca`
@@ -61,7 +61,7 @@
 
 ---
 
-### 📋 Justificativas
+###  Justificativas
 
 - Membro ausente pode submeter justificativa pelo sistema
 - Justificativas aprovadas removem o alerta pastoral para aquele evento específico
