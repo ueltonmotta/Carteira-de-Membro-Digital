@@ -20,15 +20,15 @@
         /* LAYOUT FLUIDO E RESPONSIVO                 */
         /* ========================================== */
         html { 
-            background-color: #2d3748; /* Fundo escuro e neutro para o PC */
+            background-color: #2d3748; 
         }
         
         body {
             width: 100%;
-            max-width: 414px; /* Limita a largura para parecer celular no PC */
-            min-height: 100vh; /* Ocupa a tela toda naturalmente */
+            max-width: 414px; 
+            min-height: 100vh; 
             background-color: #1a202c; 
-            margin: 0 auto; /* Centraliza no PC */
+            margin: 0 auto; 
             position: relative;
             box-shadow: 0 0 20px rgba(0,0,0,0.5); 
             overflow-x: hidden;
@@ -41,21 +41,21 @@
         /* TOP BAR E BOTÃO HAMBURGER FIXO À DIREITA   */
         /* ========================================== */
         .top-bar {
-            position: absolute; /* Fixa a barra no topo absoluto do ecrã mobile */
+            position: absolute; 
             top: 0; 
             left: 0;
             width: 100%;
             display: flex;
-            justify-content: space-between; /* Garante o Logo à esquerda e Menu à direita */
+            justify-content: space-between; 
             align-items: center;
-            padding: 20px 25px; /* Mais espaço nas laterais */
+            padding: 20px 25px; 
             box-sizing: border-box;
             z-index: 1000;
-            background-color: transparent; /* Deixei transparente para um visual mais limpo, mas pode voltar ao #0d1326 se preferir */
+            background-color: transparent; 
         }
 
         .logo-text { 
-            color: #bba371; /* Alterei para dourado para destacar no fundo escuro */
+            color: #bba371; 
             font-weight: bold; 
             font-size: 18px; 
             letter-spacing: 1px; 
@@ -63,9 +63,9 @@
 
         .hamburger-btn { 
             color: #bba371; 
-            font-size: 28px; /* Aumentei o ícone ligeiramente para facilitar o clique */
+            font-size: 28px; 
             cursor: pointer; 
-            margin-left: auto; /* Empurra o botão com força total para a direita */
+            margin-left: auto; 
             padding: 5px;
         }
 
@@ -73,7 +73,7 @@
         /* SIDEBAR (MENU UNIFICADO FIXO NA TELA)      */
         /* ========================================== */
         .sidebar-menu {
-            position: fixed; /* Fixado em relação à tela do navegador */
+            position: fixed; 
             top: 0; right: -300px;
             width: 280px;
             height: 100vh;
@@ -128,7 +128,7 @@
         /* CONTEÚDO DO CARTÃO                         */
         /* ========================================== */
         .mobile-wrapper {
-            flex: 1; /* Ocupa o restante da tela automaticamente */
+            flex: 1; 
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -136,6 +136,29 @@
             padding: 20px;
         }
         .instruction-text { color: #a0aec0; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; }
+        
+        .card-container { width: 100%; max-width: 320px; aspect-ratio: 1 / 1.6; perspective: 1000px; cursor: pointer; z-index: 5; }
+        .card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.8s; transform-style: preserve-3d; }
+        .card-container.is-flipped .card-inner { transform: rotateY(180deg); }
+        .card-face { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.3); overflow: hidden; display: flex; flex-direction: column; }
+        
+        /* Frente do Cartão */
+        .card-front { background: #f8fafc; border: 2px solid #bba371; padding: 25px 20px; box-sizing: border-box; justify-content: flex-start; }
+        .card-front .header h2 { margin: 0; color: #2c5282; font-size: 22px; font-weight: 800; line-height: 1.2; }
+        .card-front .header h2 span { font-size: 14px; font-weight: 600; color: #4a5568; }
+        .card-front .header p { margin: 5px 0 0 0; color: #bba371; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; }
+        
+        .photo-section { margin: 25px auto; width: 130px; height: 130px; border-radius: 12px; border: 3px solid #bba371; overflow: hidden; background: #e2e8f0; }
+        .member-photo { width: 100%; height: 100%; object-fit: cover; }
+        
+        /* Verso do Cartão */
+        .card-back { background: #0d1326; color: #e2e8f0; border: 2px solid #bba371; transform: rotateY(180deg); padding: 25px 20px; box-sizing: border-box; }
+        .back-header { border-bottom: 1px solid #2d3748; padding-bottom: 15px; margin-bottom: 20px; }
+        .back-header h3 { margin: 0; color: #bba371; font-size: 16px; letter-spacing: 1px; }
+        .back-details { display: flex; flex-direction: column; gap: 15px; text-align: left; }
+        .detail-row { display: flex; flex-direction: column; gap: 3px; }
+        .detail-row .label { font-size: 11px; color: #a0aec0; text-transform: uppercase; font-weight: bold; }
+        .detail-row .value { font-size: 14px; color: #fff; font-weight: 600; }
     </style>
 </head>
 <body>
@@ -189,16 +212,21 @@
                     <div class="photo-section">
                         <img src="@(string.IsNullOrEmpty(Model.FotoPerfil) ? "/images/foto-membro.jpg" : Model.FotoPerfil)" alt="Foto" class="member-photo" />
                     </div>
+                    
                     <div class="main-info">
-                        <h3 style="text-transform: uppercase;">@Model.Nome</h3>
-                        <p class="role" style="text-transform: uppercase;">@(Model.Cargo ?? "Membro")</p>
+                        <h3 style="text-transform: uppercase; margin: 0 0 5px 0; color: #0d1326; font-size: 22px;">@Model.Nome</h3>
+                        <p class="role" style="text-transform: uppercase; margin: 0; color: #bba371; font-weight: bold; font-size: 14px; letter-spacing: 1px;">@(Model.Cargo ?? "Membro")</p>
                     </div>
-                    <div class="footer-front">
-                        <div class="ids">
-                            <p><strong>ID:</strong> ADHEL-@Model.Id.ToString("D4")</p>
-                            <p><strong>VAL:</strong> @(Model.DataValidade.ToString("MM/yyyy"))</p>
+                    
+                    <div style="text-align: center; margin-top: 25px;">
+                        <div style="display: inline-block; background: #fff; padding: 8px; border-radius: 8px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                            <div id="qrcode-container" style="min-width: 100px; min-height: 100px;"></div>
                         </div>
-                        <div id="qrcode-container" style="background: white; padding: 3px; border-radius: 4px; min-width: 60px; min-height: 60px;"></div>
+
+                        <div style="color: #4a5568; font-size: 13px; font-weight: 600; display: flex; justify-content: center; gap: 20px;">
+                            <span>ID: ADHEL-@Model.Id.ToString("D4")</span>
+                            <span>VAL: @(Model.DataValidade.ToString("MM/yyyy"))</span>
+                        </div>
                     </div>
                 </div>
 
@@ -254,6 +282,7 @@
                 </form>
             </div>
         }
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
@@ -316,8 +345,8 @@
                 qrContainer.innerHTML = ""; 
                 new QRCode(qrContainer, {
                     text: dadosValidacao,
-                    width: 70, 
-                    height: 70,         
+                    width: 100, // Aumentado para preencher melhor o espaço central
+                    height: 100,         
                     colorDark: estaExpirado ? "#e53e3e" : "#0d1326", 
                     colorLight: "#ffffff", 
                     correctLevel: QRCode.CorrectLevel.L

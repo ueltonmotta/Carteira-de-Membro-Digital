@@ -29,6 +29,7 @@ namespace CarteiraDeMembroDigital.Models
         public string? CPF { get; set; }
         public string? EstadoCivil { get; set; }
         public string? Nacionalidade { get; set; }
+        public string? Endereco { get; set; } // <--- ADICIONE ESTA LINHA PARA CORRIGIR O ERRO
 
         [DataType(DataType.Date)]
         public DateTime? DataNascimento { get; set; }

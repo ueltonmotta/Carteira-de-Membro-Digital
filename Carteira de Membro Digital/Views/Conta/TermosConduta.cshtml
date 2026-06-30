@@ -1,0 +1,109 @@
+﻿@model CarteiraDeMembroDigital.Models.Usuario
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Termos e Conduta - ADHEL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        body {
+            margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0d1326; color: #e2e8f0; display: flex; justify-content: center;
+            align-items: center; min-height: 100vh; padding: 20px; box-sizing: border-box;
+        }
+        .termos-card {
+            background-color: #1a2544; padding: 40px; border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 100%; max-width: 600px;
+            box-sizing: border-box; border-top: 4px solid #bba371;
+        }
+        .header-text { text-align: center; margin-bottom: 25px; }
+        .header-text h2 { margin: 0; color: #bba371; font-size: 24px; text-transform: uppercase; }
+        .header-text p { color: #a0aec0; font-size: 14px; margin-top: 8px; }
+        
+        .caixa-termos {
+            background-color: #0d1326; border: 1px solid #2d3748; border-radius: 8px;
+            padding: 20px; height: 300px; overflow-y: auto; color: #cbd5e0;
+            font-size: 13px; line-height: 1.6; margin-bottom: 25px;
+        }
+        .caixa-termos h4 { color: #fff; margin-top: 15px; margin-bottom: 5px; }
+        .caixa-termos h4:first-child { margin-top: 0; }
+        
+        .checkbox-container {
+            display: flex; align-items: flex-start; gap: 10px; margin-bottom: 25px; color: #e2e8f0; font-size: 14px;
+        }
+        .checkbox-container input { margin-top: 3px; cursor: pointer; }
+
+        .btn-aceitar {
+            width: 100%; padding: 16px; background-color: #38a169; color: #fff; border: none;
+            border-radius: 30px; font-size: 16px; font-weight: bold; text-transform: uppercase;
+            letter-spacing: 1px; cursor: pointer; transition: background-color 0.3s;
+        }
+        .btn-aceitar:hover { background-color: #2f855a; }
+        .btn-aceitar:disabled { background-color: #4a5568; color: #a0aec0; cursor: not-allowed; }
+        
+        .btn-recusar { display: block; text-align: center; margin-top: 15px; color: #fc8181; text-decoration: none; font-size: 14px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="termos-card">
+        <div class="header-text">
+            <h2>Estatuto e Conduta</h2>
+            <p>Olá, <strong>@Model.Nome</strong>! Para prosseguir com o seu cadastro na ADHEL, leia e aceite as nossas normas e estatutos.</p>
+        </div>
+
+        <div class="caixa-termos">
+            <h4>1. Do Propósito da Igreja</h4>
+            <p>A Assembleia de Deus em Helianópolis (ADHEL) tem como objetivo principal a propagação do Evangelho de Jesus Cristo, o ensino das Sagradas Escrituras e a promoção do bem-estar espiritual e social de seus membros.</p>
+            
+            <h4>2. Dos Deveres do Membro</h4>
+            <p>Espera-se que todos os membros ativos congreguem regularmente, mantenham um testemunho cristão íntegro e colaborem para a união e paz da igreja, respeitando as lideranças estabelecidas.</p>
+            
+            <h4>3. Uso de Dados Pessoais</h4>
+            <p>Ao realizar este cadastro, o membro autoriza a Secretaria da ADHEL a armazenar os seus dados pessoais estritamente para fins de gestão eclesiástica, garantindo total privacidade.</p>
+            
+            <h4>4. Uso da Carteira Digital</h4>
+            <p>A credencial gerada por este sistema é pessoal e intransmissível. O uso indevido pode resultar na suspensão do status de "Membro Ativo".</p>
+        </div>
+
+        <div class="checkbox-container">
+            <input type="checkbox" id="checkTermos" onchange="liberarBotao()">
+            <label for="checkTermos">Li, compreendi e concordo integralmente com o Estatuto da Igreja e as regras de conduta estabelecidas.</label>
+        </div>
+
+        <form asp-controller="Conta" asp-action="RealizarCadastroFinal" method="post">
+            <input type="hidden" name="Nome" value="@Model.Nome" />
+            <input type="hidden" name="Email" value="@Model.Email" />
+            <input type="hidden" name="Telefone" value="@Model.Telefone" />
+            <input type="hidden" name="EstadoCivil" value="@Model.EstadoCivil" />
+            <input type="hidden" name="Endereco" value="@Model.Endereco" />
+            <input type="hidden" name="CPF" value="@Model.CPF" />
+            <input type="hidden" name="RG" value="@Model.RG" />
+            <input type="hidden" name="Cargo" value="@Model.Cargo" />
+            <input type="hidden" name="Perfil" value="@Model.Perfil" />
+            <input type="hidden" name="Senha" value="@Model.Senha" />
+            <input type="hidden" name="Status" value="@Model.Status" />
+
+            <button type="submit" id="btnSubmit" class="btn-aceitar" disabled>
+                <i class="fa-solid fa-check-double"></i> Aceitar e Enviar para Aprovação
+            </button>
+        </form>
+
+        <a href="@Url.Action("Login")" class="btn-recusar">Não aceitar e cancelar cadastro</a>
+    </div>
+
+    <script>
+        function liberarBotao() {
+            var checkbox = document.getElementById("checkTermos");
+            var botao = document.getElementById("btnSubmit");
+            botao.disabled = !checkbox.checked;
+        }
+    </script>
+</body>
+</html>

@@ -201,7 +201,13 @@
                         <i class="fa-solid fa-circle-exclamation"></i> @ViewBag.Erro
                     </div>
                 }
-
+                
+                @if (TempData["MensagemSucesso"] != null)
+                {
+                    <div style="background-color: rgba(56, 161, 105, 0.1); border: 1px solid #38a169; color: #48bb78; padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 13px; text-align: center; font-weight: 600;">
+                        <i class="fa-solid fa-circle-check"></i> @TempData["MensagemSucesso"]
+                    </div>
+                }
                 <form asp-controller="Conta" asp-action="Login" method="post">
                     
                     <input type="email" name="email" class="form-control" placeholder="Seu e-mail" required />
